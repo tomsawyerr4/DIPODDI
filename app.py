@@ -3,7 +3,44 @@ import re
 from programmeSport import programme_semaine_utilisateur, save_to_pdf, translate_programme
 import re
 import streamlit as st
-
+def display_program(content):
+    # Séparer le contenu en lignes
+    lines = content.split('\n')
+    
+    # Traiter chaque ligne
+    for line in lines:
+        # Détecter les liens
+        match = re.search(r'(https?://\S+)', line)
+        
+        if match:
+            # Ligne avec lien - afficher "Vidéo" centré et cliquable
+            url = match.group(0)
+            st.markdown(
+                f'<div style="text-align: center; margin: 10px 0;">'
+                f'<a href="{url}" style="color: blue; text-decoration: none;">Vidéo</a>'
+                f'</div>',
+                unsafe_allow_html=True
+            )
+        elif "Echauffement" in line:
+            # Échauffement - texte centré avec soulignement
+            st.markdown(
+                f'<div style="text-align: center; margin: 10px 0; border-bottom: 1px solid black; '
+                f'padding-bottom: 5px;">{line}</div>',
+                unsafe_allow_html=True
+            )
+        elif line.strip() and (line.isupper() or line.startswith("Jour") or line.startswith("PARTIE BONUS")):
+            # Titres en gras et centrés
+            st.markdown(
+                f'<div style="text-align: center; margin: 10px 0; font-weight: bold;">{line}</div>',
+                unsafe_allow_html=True
+            )
+        else:
+            # Texte normal centré
+            st.markdown(
+                f'<div style="text-align: center; margin: 5px 0;">{line}</div>',
+                unsafe_allow_html=True
+            )
+            
 def make_clickable_preserve_newlines(text):
     # Divise le texte en lignes tout en conservant les sauts de ligne
     lines = text.split('\n')
@@ -110,7 +147,6 @@ def main():
     specificites = mettre_a_jour_specificite(programme)
     specificite = st.selectbox("Spécificité :", specificites)
     nbr_seances = st.slider("Nombre de séances par semaine :", min_value=3, max_value=7, value=4)
-
     if st.button("Générer le programme du mois"):
         st.success(f"Programme généré pour {prenom}")
         for semaine in range(1, 5):
@@ -121,11 +157,6 @@ def main():
                 nbr_seances=nbr_seances,
                 niveau=niveau
             )
-            
-            # Traite le texte en conservant les sauts de ligne
-            resultat_avec_liens = make_clickable_preserve_newlines(resultat)
-            
-            # Affiche le résultat avec markdown (qui interprète les sauts de ligne)
-            st.markdown(resultat_avec_liens)
+            display_program(resultat)
 if __name__ == "__main__":
     main()
