@@ -24,7 +24,7 @@ def mettre_a_jour_specificite(programme):
     return []
 
 def main():
-    st.title("Générateur de Programme Sportif Personnalisé")
+    st.title("Générateur de Programme Sportif Personnalisé DIPODDI")
 
     prenom = st.text_input("Prénom :", value="user")
 
