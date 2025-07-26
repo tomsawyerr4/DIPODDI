@@ -1,6 +1,6 @@
 import streamlit as st
+import re
 from programmeSport import programme_semaine_utilisateur, save_to_pdf, translate_programme
-
 
 def mettre_a_jour_specificite(programme):
     if programme == 'MUSCULATION EN SALLE':
@@ -22,6 +22,14 @@ def mettre_a_jour_specificite(programme):
     elif programme == 'PROGRAMME DEHORS':
         return ["PERTE DE POIDS", "PUISSANCE", "REMISE EN FORME", "BOX TO BOX"]
     return []
+
+def rendre_liens_cliquables(texte):
+    lignes = texte.split('\n')
+    lignes_modifiees = []
+    for ligne in lignes:
+        ligne = re.sub(r'(https?://\S+)', r'[\1](\1)', ligne)
+        lignes_modifiees.append(ligne)
+    return "\n".join(lignes_modifiees)
 
 def main():
     st.title("Générateur de Programme Sportif Personnalisé DIPODDI")
@@ -73,6 +81,8 @@ def main():
                 nbr_seances=nbr_seances,
                 niveau=niveau
             )
-            st.text(resultat)
+            texte_formatte = rendre_liens_cliquables(resultat)
+            st.markdown(texte_formatte, unsafe_allow_html=True)
+
 if __name__ == "__main__":
     main()
