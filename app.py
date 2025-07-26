@@ -2,6 +2,7 @@ import streamlit as st
 import re
 from programmeSport import programme_semaine_utilisateur, save_to_pdf, translate_programme
 
+
 def mettre_a_jour_specificite(programme):
     if programme == 'MUSCULATION EN SALLE':
         return ["ENDURANCE DE FORCE", "FORCE MAX", "MASSE MUSCULAIRE", 
@@ -23,13 +24,10 @@ def mettre_a_jour_specificite(programme):
         return ["PERTE DE POIDS", "PUISSANCE", "REMISE EN FORME", "BOX TO BOX"]
     return []
 
+
 def rendre_liens_cliquables(texte):
-    lignes = texte.split('\n')
-    lignes_modifiees = []
-    for ligne in lignes:
-        ligne = re.sub(r'(https?://\S+)', r'[\1](\1)', ligne)
-        lignes_modifiees.append(ligne)
-    return "\n".join(lignes_modifiees)
+    return re.sub(r'(https?://\S+)', r'[\1](\1)', texte)
+
 
 def main():
     st.title("Générateur de Programme Sportif Personnalisé DIPODDI")
@@ -74,15 +72,17 @@ def main():
     if st.button(" Générer le programme du mois"):
         st.success(f"Programme généré pour {prenom}")
         for semaine in range(1, 5):
-            st.markdown(f"###  Semaine {semaine}")
+            st.markdown(f"### Semaine {semaine}")
             resultat = programme_semaine_utilisateur(
                 choix=programme,
                 theme_principal=specificite,
                 nbr_seances=nbr_seances,
                 niveau=niveau
             )
-            texte_formatte = rendre_liens_cliquables(resultat)
-            st.markdown(texte_formatte, unsafe_allow_html=True)
+            # Ajout de la fonction qui rend les liens cliquables
+            texte_avec_liens = rendre_liens_cliquables(resultat)
+            st.markdown(texte_avec_liens, unsafe_allow_html=True)
+
 
 if __name__ == "__main__":
     main()
