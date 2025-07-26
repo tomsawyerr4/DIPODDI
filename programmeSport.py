@@ -287,7 +287,7 @@ def programme_semaine_utilisateur(choix, theme_principal, nbr_seances, niveau):
         elif choix == 'MUSCULATION EN SALLE (Specifique)':
             choix2 = 'MUSCULATION EN SALLE'
 
-        programme_hebdomadaire += f"Jour {jour} : {choix2}\n"
+        programme_hebdomadaire += f"Jour {jour} : {choix2}\n\n"
         programme_hebdomadaire += f"{programme_journalier}\n"
         programme_hebdomadaire += "-" * 80 + '\n'
     
