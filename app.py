@@ -10,6 +10,14 @@ def make_links_clickable(text):
         text = text.replace(url, f"[Voir la vidéo]({url})")
     
     return text
+def make_contextual_links(text):
+    # Pattern pour détecter les URLs précédées d'une description
+    pattern = re.compile(r'(Pour voir l\'exercice en Vidéo): (https?://\S+)')
+    
+    def replace_match(match):
+        return f"{match.group(1)}: [cliquez ici ]({match.group(2)})"
+    
+    return pattern.sub(replace_match, text)
 
 def mettre_a_jour_specificite(programme):
     if programme == 'MUSCULATION EN SALLE':
@@ -95,9 +103,9 @@ def main():
             )
             
             # Traite le texte pour rendre les liens cliquables
-            resultat_avec_liens = make_links_clickable(resultat)
+            resultat = make_contextual_links(resultat)
             
             # Affiche le résultat avec markdown pour interpréter les liens
-            st.markdown(resultat_avec_liens)
+            st.markdown(resultat)
 if __name__ == "__main__":
     main()
