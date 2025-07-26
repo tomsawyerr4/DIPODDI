@@ -1,7 +1,15 @@
 import streamlit as st
 import re
 from programmeSport import programme_semaine_utilisateur, save_to_pdf, translate_programme
-
+def make_links_clickable(text):
+    # Trouve tous les URLs dans le texte
+    urls = re.findall(r'(https?://\S+)', text)
+    
+    # Remplace chaque URL par un lien markdown
+    for url in urls:
+        text = text.replace(url, f"[Voir la vidéo]({url})")
+    
+    return text
 
 def mettre_a_jour_specificite(programme):
     if programme == 'MUSCULATION EN SALLE':
@@ -86,16 +94,10 @@ def main():
                 niveau=niveau
             )
             
-            # Trouver tous les liens dans le texte
-            liens = re.findall(r'(https?://\S+)', resultat)
+            # Traite le texte pour rendre les liens cliquables
+            resultat_avec_liens = make_links_clickable(resultat)
             
-            # Afficher le texte sans les liens bruts
-            texte_sans_liens = re.sub(r'https?://\S+', '', resultat)
-            st.text(texte_sans_liens)
-            
-            # Afficher les liens comme liens cliquables
-            for lien in liens:
-                st.markdown(f"[Voir la vidéo]({lien})")
-
+            # Affiche le résultat avec markdown pour interpréter les liens
+            st.markdown(resultat_avec_liens)
 if __name__ == "__main__":
     main()
