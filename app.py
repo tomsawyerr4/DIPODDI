@@ -1,6 +1,26 @@
 import streamlit as st
 import re
 from programmeSport import programme_semaine_utilisateur, save_to_pdf, translate_programme
+import re
+import streamlit as st
+
+def make_clickable_preserve_newlines(text):
+    # Divise le texte en lignes tout en conservant les sauts de ligne
+    lines = text.split('\n')
+    
+    # Traite chaque ligne séparément
+    processed_lines = []
+    for line in lines:
+        # Trouve tous les URLs dans la ligne
+        urls = re.findall(r'(https?://\S+)', line)
+        # Remplace chaque URL par un lien markdown
+        for url in urls:
+            line = line.replace(url, f"[🔗 Voir la vidéo]({url})")
+        processed_lines.append(line)
+    
+    # Recombine les lignes avec les sauts de ligne originaux
+    return '\n'.join(processed_lines)
+    
 def make_links_clickable(text):
     # Trouve tous les URLs dans le texte
     urls = re.findall(r'(https?://\S+)', text)
@@ -102,10 +122,10 @@ def main():
                 niveau=niveau
             )
             
-            # Traite le texte pour rendre les liens cliquables
-            resultat = make_contextual_links(resultat)
+            # Traite le texte en conservant les sauts de ligne
+            resultat_avec_liens = make_clickable_preserve_newlines(resultat)
             
-            # Affiche le résultat avec markdown pour interpréter les liens
-            st.markdown(resultat)
+            # Affiche le résultat avec markdown (qui interprète les sauts de ligne)
+            st.markdown(resultat_avec_liens)
 if __name__ == "__main__":
     main()
