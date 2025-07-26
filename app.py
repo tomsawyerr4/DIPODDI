@@ -85,7 +85,7 @@ def main():
                 nbr_seances=nbr_seances,
                 niveau=niveau
             )
-            st.markdown(formatter_texte_avec_liens(resultat), unsafe_allow_html=True)
+            st.markdown(resultat)
 
 
 if __name__ == "__main__":
