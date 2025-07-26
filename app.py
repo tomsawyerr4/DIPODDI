@@ -78,7 +78,7 @@ def main():
     if st.button(" Générer le programme du mois"):
         st.success(f"Programme généré pour {prenom}")
         for semaine in range(1, 5):
-            st.markdown(f"### Semaine {semaine}")
+            st.text(f"### Semaine {semaine}")
             resultat = programme_semaine_utilisateur(
                 choix=programme,
                 theme_principal=specificite,
