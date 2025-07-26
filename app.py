@@ -29,6 +29,12 @@ def rendre_liens_cliquables(texte):
     return re.sub(r'(https?://\S+)', r'[\1](\1)', texte)
 
 
+def formatter_texte_avec_liens(texte):
+    # Convertir les liens en format Markdown cliquable
+    texte = re.sub(r'(https?://[^\s]+)', r'[\1](\1)', texte)
+    # Remplacer les retours à la ligne simples par deux espaces + retour à la ligne (Markdown)
+    texte = texte.replace('\n', '  \n')
+    return texte
 def main():
     st.title("Générateur de Programme Sportif Personnalisé DIPODDI")
 
@@ -79,9 +85,7 @@ def main():
                 nbr_seances=nbr_seances,
                 niveau=niveau
             )
-            # Ajout de la fonction qui rend les liens cliquables
-            texte_avec_liens = rendre_liens_cliquables(resultat)
-            st.markdown(texte_avec_liens, unsafe_allow_html=True)
+            st.markdown(formatter_texte_avec_liens(resultat), unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
