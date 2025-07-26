@@ -75,18 +75,27 @@ def main():
     specificite = st.selectbox("Spécificité :", specificites)
     nbr_seances = st.slider("Nombre de séances par semaine :", min_value=3, max_value=7, value=4)
 
-    if st.button(" Générer le programme du mois"):
+    if st.button("Générer le programme du mois"):
         st.success(f"Programme généré pour {prenom}")
         for semaine in range(1, 5):
-            st.text(f"### Semaine {semaine}")
+            st.markdown(f"### Semaine {semaine}")
             resultat = programme_semaine_utilisateur(
                 choix=programme,
                 theme_principal=specificite,
                 nbr_seances=nbr_seances,
                 niveau=niveau
             )
-            st.markdown(resultat, unsafe_allow_html=True)
-
+            
+            # Trouver tous les liens dans le texte
+            liens = re.findall(r'(https?://\S+)', resultat)
+            
+            # Afficher le texte sans les liens bruts
+            texte_sans_liens = re.sub(r'https?://\S+', '', resultat)
+            st.text(texte_sans_liens)
+            
+            # Afficher les liens comme liens cliquables
+            for lien in liens:
+                st.markdown(f"[Voir la vidéo]({lien})")
 
 if __name__ == "__main__":
     main()
