@@ -15,7 +15,7 @@ def make_clickable_preserve_newlines(text):
         urls = re.findall(r'(https?://\S+)', line)
         # Remplace chaque URL par un lien markdown
         for url in urls:
-            line = line.replace(url, f"[Voir la vidéo]({url})\n")
+            line = line.replace(url, f"\n[Voir la vidéo]({url})")
         processed_lines.append(line)
     
     # Recombine les lignes avec les sauts de ligne originaux
