@@ -24,7 +24,7 @@ def mettre_a_jour_specificite(programme):
     return []
 
 def main():
-    st.title("🏋️ Générateur de Programme Sportif Personnalisé")
+    st.title("Générateur de Programme Sportif Personnalisé")
 
     prenom = st.text_input("Prénom :", value="user")
 
@@ -74,17 +74,5 @@ def main():
                 niveau=niveau
             )
             st.text(resultat)
-
-        if st.checkbox(" Sauvegarder en PDF"):
-            nom_fichier = f"programme_{prenom}.pdf"
-            save_to_pdf(resultat, filename=nom_fichier)
-            with open(nom_fichier, "rb") as file:
-                st.download_button(
-                    label=" Télécharger le PDF",
-                    data=file,
-                    file_name=nom_fichier,
-                    mime="application/pdf"
-                )
-
 if __name__ == "__main__":
     main()
