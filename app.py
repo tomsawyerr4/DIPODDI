@@ -855,6 +855,8 @@ def display_program(content):
             st.markdown(f"**{line}**")
         else:
             st.markdown(line)
+
+
  '''   
 def display_program(content):
     # Séparer le contenu en lignes
