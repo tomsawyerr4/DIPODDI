@@ -147,6 +147,27 @@ def main():
     specificites = mettre_a_jour_specificite(programme)
     specificite = st.selectbox("Spécificité :", specificites)
     nbr_seances = st.slider("Nombre de séances par semaine :", min_value=3, max_value=7, value=4)
+    est_dans_club = st.radio("Êtes-vous dans un club ?", ["OUI", "NON"])
+    
+    jours_match = []
+    if est_dans_club == "OUI":
+        jours_match = st.multiselect(
+            "Quels jours avez-vous match ?",
+            ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"],
+            default=[]
+        )
+    
+    jours_disponibles = st.multiselect(
+        "Quels jours voulez-vous effectuer votre programme DIPODDI ? (3 jours min)",
+        ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"],
+        default=["LUNDI", "MERCREDI", "VENDREDI"]
+    )
+    
+    if len(jours_disponibles) < 3:
+        st.warning("Veuillez sélectionner au moins 3 jours.")
+    
+
+    
     if st.button("Générer le programme du mois"):
         st.success(f"Programme généré pour {prenom}")
         for semaine in range(1, 5):
@@ -158,5 +179,7 @@ def main():
                 niveau=niveau
             )
             display_program(resultat)
+
+
 if __name__ == "__main__":
     main()
