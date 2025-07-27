@@ -253,7 +253,7 @@ def programme_semaine_utilisateur(choix, theme_principal, nbr_seances, niveau):
     if nbr_seances == 2:
         nb_principal = 1
         nb_alternatif = 1
-    if nbr_seances == 3:
+    elif nbr_seances == 3:
         nb_principal = 2
         nb_alternatif = 1
     elif nbr_seances == 4:
