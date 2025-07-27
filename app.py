@@ -947,7 +947,7 @@ def main():
     nbr_seances = len(jours_disponibles)
     if len(jours_disponibles) < 2:
         st.warning("Veuillez sélectionner au moins 2 jours.")    
-        if st.button("Générer le programme du mois"):
+    if st.button("Générer le programme du mois"):
             st.success(f"Programme généré pour {prenom}")
             if len(jours_disponibles) >= 2:
                 weights = get_specificite_weights(poste, profil, programme)
