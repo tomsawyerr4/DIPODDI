@@ -933,58 +933,56 @@ def main():
     if len(jours_entrainement) < 2:
         st.warning("Veuillez sélectionner au moins 2 jours.")    
     if st.button("Générer le programme du mois"):
-        st.success(f"Programme généré pour {prenom}")
-        if len(jours_entrainement) >= 2:
+        st.success(f"Programme généré pour {prenom if prenom else 'User'}")
+        if len(jours_disponibles) >= 2:
             weights = get_specificite_weights(poste, profil, programme)
             
-            # Date de début (lundi de la semaine en cours)
+            # Date de début = jour actuel
             today = datetime.now()
-            start_date = today - timedelta(days=today.weekday())  # Lundi de cette semaine
+            start_date = today
             
             for semaine in range(1, 5):
                 current_specificite = specificite if semaine == 1 else choose_specificite(weights, specificite)
                 st.markdown(f"### Semaine {semaine} - {current_specificite}")
+                st.caption(f"Du {start_date.strftime('%A %d/%m/%Y')} au {(start_date + timedelta(days=6)).strftime('%A %d/%m/%Y')}")
                 
-                # Générer le programme d'entraînement
-                resultat_entrainement = programme_semaine_utilisateur(
+                resultat = programme_semaine_utilisateur(
                     choix=programme,
                     theme_principal=current_specificite,
                     nbr_seances=nbr_seances,
                     niveau=niveau
                 )
                 
-                # Traitement des jours d'entraînement avec dates
-                lines = resultat_entrainement.split('\n')
+                # Traitement des jours avec dates
+                lines = resultat.split('\n')
                 processed_lines = []
                 
                 for line in lines:
-                    for i, jour in enumerate(jours_entrainement):
+                    for i, jour in enumerate(jours_disponibles):
                         if f"Jour {i+1}" in line:
-                            # Trouver la date correspondante
+                            # Trouver le jour dans la semaine actuelle
                             jours_semaine = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"]
                             date_index = jours_semaine.index(jour)
-                            current_date = start_date + timedelta(days=date_index + (semaine-1)*7)
                             
-                            # Traduire le jour en français
-                            day_en = current_date.strftime("%A")
-                            day_fr = JOURS_TRADUCTION.get(day_en, day_en)
+                            # Calculer le décalage par rapport au jour de départ
+                            day_offset = (date_index - today.weekday()) % 7
+                            current_date = start_date + timedelta(days=day_offset + (semaine-1)*7)
+                            
+                            # Formater la date en français
+                            day_fr = JOURS_TRADUCTION[current_date.strftime("%A")]
                             date_str = f"{day_fr} {current_date.strftime('%d/%m/%Y')}"
-                            line = line.replace(f"Jour {i+1}", date_str)
+                            
+                            # Ajouter mention jour de match si besoin
+                            match_str = " (jour de match)" if jour in jours_match else ""
+                            line = line.replace(f"Jour {i+1}", f"{date_str}{match_str}")
                             break
                     
                     processed_lines.append(line)
                 
-                # Ajouter les jours de match au résultat
-                if jours_match:
-                    processed_lines.append("\n\nJOURS DE MATCH:")
-                    for jour in jours_match:
-                        date_index = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"].index(jour)
-                        current_date = start_date + timedelta(days=date_index + (semaine-1)*7)
-                        day_en = current_date.strftime("%A")
-                        day_fr = JOURS_TRADUCTION.get(day_en, day_en)
-                        processed_lines.append(f"- {day_fr} {current_date.strftime('%d/%m/%Y')} (jour de match)")
-                
                 display_program('\n'.join(processed_lines))
+                
+                # Préparation pour la semaine suivante
+                start_date += timedelta(days=7)
                 
 if __name__ == "__main__":
     main()
