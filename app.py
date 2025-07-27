@@ -2,7 +2,8 @@ import streamlit as st
 import re
 from programmeSport import programme_semaine_utilisateur, save_to_pdf, translate_programme
 import numpy as np
-import streamlit as st
+from datetime import datetime, timedelta
+import locale
 def get_specificite_weights(poste, profil, programme):
     weights = {
         "GARDIENS": {
