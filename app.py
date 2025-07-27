@@ -146,7 +146,7 @@ def main():
 
     specificites = mettre_a_jour_specificite(programme)
     specificite = st.selectbox("Spécificité :", specificites)
-    nbr_seances = st.slider("Nombre de séances par semaine :", min_value=3, max_value=7, value=4)
+    #nbr_seances = st.slider("Nombre de séances par semaine :", min_value=3, max_value=7, value=4)
     est_dans_club = st.radio("Êtes-vous dans un club ?", ["OUI", "NON"])
     
     jours_match = []
@@ -162,7 +162,7 @@ def main():
         ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"],
         default=["LUNDI", "MERCREDI", "VENDREDI"]
     )
-    
+    nbr_seances = len(jours_disponibles)
     if len(jours_disponibles) < 3:
         st.warning("Veuillez sélectionner au moins 3 jours.")
     
