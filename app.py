@@ -984,5 +984,7 @@ def main():
                         day_fr = JOURS_TRADUCTION.get(day_en, day_en)
                         processed_lines.append(f"- {day_fr} {current_date.strftime('%d/%m/%Y')} (jour de match)")
                 
-                display_program('\n'.join(processed_lines))if __name__ == "__main__":
+                display_program('\n'.join(processed_lines))
+                
+if __name__ == "__main__":
     main()
