@@ -941,12 +941,15 @@ def main():
         if len(jours_disponibles) >= 3:
             weights = get_specificite_weights(poste, profil, programme)
             
+            # Définir la date de début (aujourd'hui ou lundi prochain)
+            today = datetime.now()
+            start_date = today + timedelta(days=(7 - today.weekday()))  # Prochain lundi
+            
             for semaine in range(1, 5):
-                st.markdown(f"### Semaine {semaine}")
-                
-                # Pour la semaine 1, on garde la spécificité choisie
-                # À partir de la semaine 2, on choisit selon les poids
                 current_specificite = specificite if semaine == 1 else choose_specificite(weights, specificite)
+                
+                # Afficher la spécificité de la semaine
+                st.markdown(f"### Semaine {semaine} - {current_specificite}")
                 
                 resultat = programme_semaine_utilisateur(
                     choix=programme,
@@ -955,15 +958,33 @@ def main():
                     niveau=niveau
                 )
                 
-                # Remplacer Jour 1, Jour 2... par les vrais jours choisis
-                for i, jour in enumerate(jours_disponibles):
-                    resultat = resultat.replace(f"Jour {i+1}", jour.upper())
+                # Traitement des jours avec dates et mentions de match
+                lines = resultat.split('\n')
+                processed_lines = []
                 
-                display_program(resultat)
+                # Calcul des dates pour la semaine en cours
+                week_dates = [start_date + timedelta(days=(i + (semaine-1)*7)) for i in range(7)]
                 
-                # Afficher la spécificité utilisée pour cette semaine
-                if semaine > 1:
-                    st.caption(f"Spécificité choisie: {current_specificite} (adaptée à votre profil {profil})")
-
+                for line in lines:
+                    # Remplacer les jours par leur version datée
+                    for i, jour in enumerate(jours_disponibles):
+                        if f"Jour {i+1}" in line:
+                            date_index = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"].index(jour)
+                            current_date = week_dates[date_index]
+                            date_str = current_date.strftime("%A %d/%m/%Y").capitalize()
+                            
+                            # Ajouter la mention "jour de match" si nécessaire
+                            match_str = " (jour de match)" if jour in jours_match else ""
+                            line = line.replace(f"Jour {i+1}", f"{date_str}{match_str}")
+                            break
+                    
+                    processed_lines.append(line)
+                
+                # Reconstituer le texte avec les modifications
+                resultat_avec_dates = '\n'.join(processed_lines)
+                display_program(resultat_avec_dates)
+                
+                # Préparation pour la semaine suivante
+                start_date += timedelta(days=7)
 if __name__ == "__main__":
     main()
