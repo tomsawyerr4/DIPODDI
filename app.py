@@ -873,7 +873,6 @@ def mettre_a_jour_specificite(programme):
     return []
 
 def main():
-def main():
     st.title("Générateur de Programme Sportif Personnalisé DIPODDI")
     
     # Nouvelle section: Coordonnées
