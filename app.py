@@ -1,6 +1,6 @@
 import streamlit as st
 import re
-from programmeSport import programme_semaine_utilisateur, save_to_pdf, translate_programme
+from programmeSport import programme_semaine_utilisateur, save_to_pdf
 import numpy as np
 from datetime import datetime, timedelta
 import locale
