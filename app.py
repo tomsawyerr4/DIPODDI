@@ -874,31 +874,9 @@ def mettre_a_jour_specificite(programme):
 
 def main():
     st.title("Générateur de Programme Sportif Personnalisé DIPODDI")
-    
-    # Nouvelle section: Coordonnées
-    st.header("VEUILLEZ SAISIR VOS COORDONNÉES")
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        prenom = st.text_input("PRÉNOM ", value="")
-    with col2:
-        nom = st.text_input("NOM ", value="")
-    
-    genre = st.radio("SEXE ", ["HOMME", "FEMME"], horizontal=True)
-    
-    col3, col4, col5 = st.columns(3)
-    with col3:
-        taille = st.number_input("TAILLE (cm) ", min_value=100, max_value=250, value=175)
-    with col4:
-        poids = st.number_input("POIDS (kg) ", min_value=30, max_value=200, value=70)
-    with col5:
-        age = st.number_input("ÂGE ", min_value=10, max_value=100, value=25)
-    
-    email = st.text_input("EMAIL ", value="")
-        
-    # Ancienne section (le reste de votre formulaire)
-    st.header("VOS PRÉFÉRENCES SPORTIVES")
-    
+
+    prenom = st.text_input("Prénom :", value="user")
+
     discipline = st.selectbox("Quel est votre discipline ?", ["FOOTBALL", "FUTSAL"])
     poste = st.selectbox("Quel est votre poste ?", ["GARDIENS", "DÉFENSEURS", "MILIEUX", "ATTAQUANTS"])
 
@@ -930,7 +908,7 @@ def main():
 
     specificites = mettre_a_jour_specificite(programme)
     specificite = st.selectbox("Spécificité :", specificites)
-    #nbr_seances = st.slider("Nombre de séances par semaine :", min_value=3, max_value=7, value=4)
+    
     est_dans_club = st.radio("Êtes-vous dans un club ?", ["OUI", "NON"])
     
     jours_match = []
@@ -941,58 +919,70 @@ def main():
             default=[]
         )
     
-    jours_disponibles = st.multiselect(
+    # Exclure les jours de match des jours disponibles pour l'entraînement
+    jours_disponibles_entrainement = [jour for jour in ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"] 
+                                    if jour not in jours_match]
+    
+    jours_entrainement = st.multiselect(
         "Quels jours voulez-vous effectuer votre programme DIPODDI ? (2 jours min)",
-        ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"],
-        default=["LUNDI", "MERCREDI", "VENDREDI"]
+        jours_disponibles_entrainement,
+        default=jours_disponibles_entrainement[:3] if len(jours_disponibles_entrainement) >= 3 else jours_disponibles_entrainement
     )
-    nbr_seances = len(jours_disponibles)
-    if len(jours_disponibles) < 2:
+    
+    nbr_seances = len(jours_entrainement)
+    if len(jours_entrainement) < 2:
         st.warning("Veuillez sélectionner au moins 2 jours.")    
     if st.button("Générer le programme du mois"):
-            st.success(f"Programme généré pour {prenom}")
-            if len(jours_disponibles) >= 2:
-                weights = get_specificite_weights(poste, profil, programme)
+        st.success(f"Programme généré pour {prenom}")
+        if len(jours_entrainement) >= 2:
+            weights = get_specificite_weights(poste, profil, programme)
+            
+            # Date de début (lundi de la semaine en cours)
+            today = datetime.now()
+            start_date = today - timedelta(days=today.weekday())  # Lundi de cette semaine
+            
+            for semaine in range(1, 5):
+                current_specificite = specificite if semaine == 1 else choose_specificite(weights, specificite)
+                st.markdown(f"### Semaine {semaine} - {current_specificite}")
                 
-                # Date de début (lundi de la semaine en cours)
-                today = datetime.now()
-                start_date = today - timedelta(days=today.weekday())  # Lundi de cette semaine
+                # Générer le programme d'entraînement
+                resultat_entrainement = programme_semaine_utilisateur(
+                    choix=programme,
+                    theme_principal=current_specificite,
+                    nbr_seances=nbr_seances,
+                    niveau=niveau
+                )
                 
-                for semaine in range(1, 5):
-                    current_specificite = specificite if semaine == 1 else choose_specificite(weights, specificite)
-                    st.markdown(f"### Semaine {semaine} - {current_specificite}")
+                # Traitement des jours d'entraînement avec dates
+                lines = resultat_entrainement.split('\n')
+                processed_lines = []
+                
+                for line in lines:
+                    for i, jour in enumerate(jours_entrainement):
+                        if f"Jour {i+1}" in line:
+                            # Trouver la date correspondante
+                            jours_semaine = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"]
+                            date_index = jours_semaine.index(jour)
+                            current_date = start_date + timedelta(days=date_index + (semaine-1)*7)
+                            
+                            # Traduire le jour en français
+                            day_en = current_date.strftime("%A")
+                            day_fr = JOURS_TRADUCTION.get(day_en, day_en)
+                            date_str = f"{day_fr} {current_date.strftime('%d/%m/%Y')}"
+                            line = line.replace(f"Jour {i+1}", date_str)
+                            break
                     
-                    resultat = programme_semaine_utilisateur(
-                        choix=programme,
-                        theme_principal=current_specificite,
-                        nbr_seances=nbr_seances,
-                        niveau=niveau
-                    )
-                    
-                    # Traitement des jours avec dates
-                    lines = resultat.split('\n')
-                    processed_lines = []
-                    
-                    for line in lines:
-                        for i, jour in enumerate(jours_disponibles):
-                            if f"Jour {i+1}" in line:
-                                # Trouver la date correspondante
-                                jours_semaine = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"]
-                                date_index = jours_semaine.index(jour)
-                                current_date = start_date + timedelta(days=date_index + (semaine-1)*7)
-                                
-                                # Traduire le jour en français
-                                day_en = current_date.strftime("%A")
-                                day_fr = JOURS_TRADUCTION.get(day_en, day_en)
-                                date_str = f"{day_fr} {current_date.strftime('%d/%m/%Y')}"
-                                
-                                # Ajouter mention jour de match si besoin
-                                match_str = " (jour de match)" if jour in jours_match else ""
-                                line = line.replace(f"Jour {i+1}", f"{date_str}{match_str}")
-                                break
-                        
-                        processed_lines.append(line)
-                    
-                    display_program('\n'.join(processed_lines))
-if __name__ == "__main__":
+                    processed_lines.append(line)
+                
+                # Ajouter les jours de match au résultat
+                if jours_match:
+                    processed_lines.append("\n\nJOURS DE MATCH:")
+                    for jour in jours_match:
+                        date_index = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"].index(jour)
+                        current_date = start_date + timedelta(days=date_index + (semaine-1)*7)
+                        day_en = current_date.strftime("%A")
+                        day_fr = JOURS_TRADUCTION.get(day_en, day_en)
+                        processed_lines.append(f"- {day_fr} {current_date.strftime('%d/%m/%Y')} (jour de match)")
+                
+                display_program('\n'.join(processed_lines))if __name__ == "__main__":
     main()
