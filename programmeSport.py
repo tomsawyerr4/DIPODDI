@@ -250,6 +250,9 @@ def programme_semaine_utilisateur(choix, theme_principal, nbr_seances, niveau):
     themes_alternatifs = [t for t in themes if t != theme_principal]
     
     # Déterminer la fréquence des thèmes principaux et alternatifs
+    if nbr_seances == 2:
+        nb_principal = 1
+        nb_alternatif = 1
     if nbr_seances == 3:
         nb_principal = 2
         nb_alternatif = 1
@@ -266,7 +269,7 @@ def programme_semaine_utilisateur(choix, theme_principal, nbr_seances, niveau):
         nb_principal = random.choice([3, 4])
         nb_alternatif = nbr_seances - nb_principal
     else:
-        return "Nombre de séances invalide. Veuillez choisir entre 3 et 7 séances par semaine."
+        return "Nombre de séances invalide. Veuillez choisir entre 2 et 7 séances par semaine."
 
     # Construire la liste des thèmes pour la semaine
     themes_semaine = [theme_principal] * nb_principal
