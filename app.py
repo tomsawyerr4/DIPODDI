@@ -880,27 +880,22 @@ def main():
     
     col1, col2 = st.columns(2)
     with col1:
-        prenom = st.text_input("PRÉNOM *", value="")
+        prenom = st.text_input("PRÉNOM ", value="")
     with col2:
-        nom = st.text_input("NOM *", value="")
+        nom = st.text_input("NOM ", value="")
     
     genre = st.radio("HOMME / FEMME *", ["HOMME", "FEMME"], horizontal=True)
     
     col3, col4, col5 = st.columns(3)
     with col3:
-        taille = st.number_input("TAILLE (cm) *", min_value=100, max_value=250, value=175)
+        taille = st.number_input("TAILLE (cm) ", min_value=100, max_value=250, value=175)
     with col4:
         poids = st.number_input("POIDS (kg) *", min_value=30, max_value=200, value=70)
     with col5:
-        age = st.number_input("ÂGE *", min_value=10, max_value=100, value=25)
+        age = st.number_input("ÂGE ", min_value=10, max_value=100, value=25)
     
-    email = st.text_input("EMAIL *", value="")
-    
-    # Validation des champs obligatoires
-    if not prenom or not nom or not email:
-        st.warning("Veuillez remplir tous les champs obligatoires (*)")
-        return
-    
+    email = st.text_input("EMAIL ", value="")
+        
     # Ancienne section (le reste de votre formulaire)
     st.header("VOS PRÉFÉRENCES SPORTIVES")
     
