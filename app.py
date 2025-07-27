@@ -4,6 +4,7 @@ from programmeSport import programme_semaine_utilisateur, save_to_pdf, translate
 import numpy as np
 from datetime import datetime, timedelta
 import locale
+locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
 def get_specificite_weights(poste, profil, programme):
     weights = {
         "GARDIENS": {
