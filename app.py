@@ -830,7 +830,32 @@ def choose_specificite(weights, current_specificite):
     choices = list(normalized.keys())
     probabilities = list(normalized.values())
     return np.random.choice(choices, p=probabilities)
+
+def display_program(content):
+    lines = content.split('\n')
     
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+            
+        # Détecter les liens vidéo
+        match = re.search(r'(https?://\S+)', line)
+        if match:
+            st.markdown(f"[Vidéo démo ↗]({match.group(0)})")
+        # Détecter les lignes de jour
+        elif any(jour in line for jour in ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]):
+            if "jour de match" in line:
+                st.markdown(f"**{line}** ")
+            else:
+                st.markdown(f"**{line}**")
+        elif "Echauffement" in line:
+            st.markdown(f"*{line}*")
+        elif line.isupper() or line.startswith("PARTIE BONUS"):
+            st.markdown(f"**{line}**")
+        else:
+            st.markdown(line)
+ '''   
 def display_program(content):
     # Séparer le contenu en lignes
     lines = content.split('\n')
@@ -868,7 +893,7 @@ def display_program(content):
                 f'<div style="text-align: center; margin: 5px 0;">{line}</div>',
                 unsafe_allow_html=True
             )
-            
+     '''       
 def mettre_a_jour_specificite(programme):
     if programme == 'MUSCULATION EN SALLE':
         return ["ENDURANCE DE FORCE", "FORCE MAX", "MASSE MUSCULAIRE", 
