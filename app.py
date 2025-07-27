@@ -11,7 +11,7 @@ try:
 except locale.Error:
     try:
         locale.setlocale(locale.LC_TIME, 'fr_FR')
-    except locale.Error:
+    except:
         locale.setlocale(locale.LC_TIME, 'fr')
     finally:
         # Dictionnaire de traduction manuelle au cas où
