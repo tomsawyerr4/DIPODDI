@@ -5,25 +5,15 @@ import numpy as np
 from datetime import datetime, timedelta
 import locale
 
-# Configuration robuste de la locale
-try:
-    locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
-except locale.Error:
-    try:
-        locale.setlocale(locale.LC_TIME, 'fr_FR')
-    except:
-        locale.setlocale(locale.LC_TIME, 'fr')
-    finally:
-        # Dictionnaire de traduction manuelle au cas où
-        DAY_TRANSLATIONS = {
-            'Monday': 'Lundi',
-            'Tuesday': 'Mardi',
-            'Wednesday': 'Mercredi',
-            'Thursday': 'Jeudi',
-            'Friday': 'Vendredi',
-            'Saturday': 'Samedi',
-            'Sunday': 'Dimanche'
-        }
+JOURS_TRADUCTION = {
+    'Monday': 'Lundi',
+    'Tuesday': 'Mardi',
+    'Wednesday': 'Mercredi',
+    'Thursday': 'Jeudi',
+    'Friday': 'Vendredi',
+    'Saturday': 'Samedi',
+    'Sunday': 'Dimanche'
+}
 
 def get_specificite_weights(poste, profil, programme):
     weights = {
@@ -956,15 +946,15 @@ def main():
     )
     nbr_seances = len(jours_disponibles)
     if len(jours_disponibles) < 2:
-        st.warning("Veuillez sélectionner au moins 2 jours.")
+        st.warning("Veuillez sélectionner au moins 2 jours.")    
         if st.button("Générer le programme du mois"):
             st.success(f"Programme généré pour {prenom}")
-            if len(jours_disponibles) >= 3:
+            if len(jours_disponibles) >= 2:
                 weights = get_specificite_weights(poste, profil, programme)
                 
-                # Définir la date de début (aujourd'hui ou lundi prochain)
+                # Date de début (lundi de la semaine en cours)
                 today = datetime.now()
-                start_date = today + timedelta(days=(0 - today.weekday()))  # Lundi de cette semaine
+                start_date = today - timedelta(days=today.weekday())  # Lundi de cette semaine
                 
                 for semaine in range(1, 5):
                     current_specificite = specificite if semaine == 1 else choose_specificite(weights, specificite)
@@ -984,19 +974,17 @@ def main():
                     for line in lines:
                         for i, jour in enumerate(jours_disponibles):
                             if f"Jour {i+1}" in line:
-                                # Calcul de la date
+                                # Trouver la date correspondante
                                 jours_semaine = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"]
                                 date_index = jours_semaine.index(jour)
                                 current_date = start_date + timedelta(days=date_index + (semaine-1)*7)
                                 
-                                # Formatage de la date
-                                try:
-                                    date_str = current_date.strftime("%A %d/%m/%Y").capitalize()
-                                except:
-                                    # Fallback si la locale ne fonctionne pas
-                                    english_day = current_date.strftime("%A")
-                                    date_str = DAY_TRANSLATIONS.get(english_day, english_day) + current_date.strftime(" %d/%m/%Y")
+                                # Traduire le jour en français
+                                day_en = current_date.strftime("%A")
+                                day_fr = JOURS_TRADUCTION.get(day_en, day_en)
+                                date_str = f"{day_fr} {current_date.strftime('%d/%m/%Y')}"
                                 
+                                # Ajouter mention jour de match si besoin
                                 match_str = " (jour de match)" if jour in jours_match else ""
                                 line = line.replace(f"Jour {i+1}", f"{date_str}{match_str}")
                                 break
