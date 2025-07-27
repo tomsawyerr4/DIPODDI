@@ -922,9 +922,7 @@ def main():
     niveau = st.selectbox("Votre niveau :", ['Debutant', 'Intermidiaire', 'Avance'])
     programme = st.selectbox("Choisissez un programme :", [
         'MUSCULATION EN SALLE',
-        'MUSCULATION EN SALLE (Specifique)',
         'MUSCULATION EN SALLE + CARDIO(Generale)',
-        'MUSCULATION EN SALLE + CARDIO(Specifique)',
         'CARDIO EN SALLE',
         'PROGRAMME MAISON',
         'PROGRAMME DEHORS'
