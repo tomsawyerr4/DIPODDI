@@ -170,15 +170,19 @@ def main():
     
     if st.button("Générer le programme du mois"):
         st.success(f"Programme généré pour {prenom}")
-        for semaine in range(1, 5):
-            st.markdown(f"### Semaine {semaine}")
-            resultat = programme_semaine_utilisateur(
-                choix=programme,
-                theme_principal=specificite,
-                nbr_seances=nbr_seances,
-                niveau=niveau
-            )
-            display_program(resultat)
+        if len(jours_disponibles) >= 3:
+            for semaine in range(1, 5):
+                st.markdown(f"### Semaine {semaine}")
+                resultat = programme_semaine_utilisateur(
+                    choix=programme,
+                    theme_principal=specificite,
+                    nbr_seances=nbr_seances,
+                    niveau=niveau
+                )
+                # Remplacer Jour 1, Jour 2... par les vrais jours choisis
+                for i, jour in enumerate(jours_disponibles):
+                    resultat = resultat.replace(f"Jour {i+1}", jour.upper())
+                display_program(resultat)
 
 
 if __name__ == "__main__":
