@@ -950,59 +950,59 @@ def main():
         )
     
     jours_disponibles = st.multiselect(
-        "Quels jours voulez-vous effectuer votre programme DIPODDI ? (3 jours min)",
+        "Quels jours voulez-vous effectuer votre programme DIPODDI ? (2 jours min)",
         ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"],
         default=["LUNDI", "MERCREDI", "VENDREDI"]
     )
     nbr_seances = len(jours_disponibles)
-    if len(jours_disponibles) < 3:
-        st.warning("Veuillez sélectionner au moins 3 jours.")
+    if len(jours_disponibles) < 2:
+        st.warning("Veuillez sélectionner au moins 2 jours.")
         if st.button("Générer le programme du mois"):
-        st.success(f"Programme généré pour {prenom}")
-        if len(jours_disponibles) >= 3:
-            weights = get_specificite_weights(poste, profil, programme)
-            
-            # Définir la date de début (aujourd'hui ou lundi prochain)
-            today = datetime.now()
-            start_date = today + timedelta(days=(0 - today.weekday()))  # Lundi de cette semaine
-            
-            for semaine in range(1, 5):
-                current_specificite = specificite if semaine == 1 else choose_specificite(weights, specificite)
-                st.markdown(f"### Semaine {semaine} - {current_specificite}")
+            st.success(f"Programme généré pour {prenom}")
+            if len(jours_disponibles) >= 3:
+                weights = get_specificite_weights(poste, profil, programme)
                 
-                resultat = programme_semaine_utilisateur(
-                    choix=programme,
-                    theme_principal=current_specificite,
-                    nbr_seances=nbr_seances,
-                    niveau=niveau
-                )
+                # Définir la date de début (aujourd'hui ou lundi prochain)
+                today = datetime.now()
+                start_date = today + timedelta(days=(0 - today.weekday()))  # Lundi de cette semaine
                 
-                # Traitement des jours avec dates
-                lines = resultat.split('\n')
-                processed_lines = []
-                
-                for line in lines:
-                    for i, jour in enumerate(jours_disponibles):
-                        if f"Jour {i+1}" in line:
-                            # Calcul de la date
-                            jours_semaine = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"]
-                            date_index = jours_semaine.index(jour)
-                            current_date = start_date + timedelta(days=date_index + (semaine-1)*7)
-                            
-                            # Formatage de la date
-                            try:
-                                date_str = current_date.strftime("%A %d/%m/%Y").capitalize()
-                            except:
-                                # Fallback si la locale ne fonctionne pas
-                                english_day = current_date.strftime("%A")
-                                date_str = DAY_TRANSLATIONS.get(english_day, english_day) + current_date.strftime(" %d/%m/%Y")
-                            
-                            match_str = " (jour de match)" if jour in jours_match else ""
-                            line = line.replace(f"Jour {i+1}", f"{date_str}{match_str}")
-                            break
+                for semaine in range(1, 5):
+                    current_specificite = specificite if semaine == 1 else choose_specificite(weights, specificite)
+                    st.markdown(f"### Semaine {semaine} - {current_specificite}")
                     
-                    processed_lines.append(line)
-                
-                display_program('\n'.join(processed_lines))
+                    resultat = programme_semaine_utilisateur(
+                        choix=programme,
+                        theme_principal=current_specificite,
+                        nbr_seances=nbr_seances,
+                        niveau=niveau
+                    )
+                    
+                    # Traitement des jours avec dates
+                    lines = resultat.split('\n')
+                    processed_lines = []
+                    
+                    for line in lines:
+                        for i, jour in enumerate(jours_disponibles):
+                            if f"Jour {i+1}" in line:
+                                # Calcul de la date
+                                jours_semaine = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"]
+                                date_index = jours_semaine.index(jour)
+                                current_date = start_date + timedelta(days=date_index + (semaine-1)*7)
+                                
+                                # Formatage de la date
+                                try:
+                                    date_str = current_date.strftime("%A %d/%m/%Y").capitalize()
+                                except:
+                                    # Fallback si la locale ne fonctionne pas
+                                    english_day = current_date.strftime("%A")
+                                    date_str = DAY_TRANSLATIONS.get(english_day, english_day) + current_date.strftime(" %d/%m/%Y")
+                                
+                                match_str = " (jour de match)" if jour in jours_match else ""
+                                line = line.replace(f"Jour {i+1}", f"{date_str}{match_str}")
+                                break
+                        
+                        processed_lines.append(line)
+                    
+                    display_program('\n'.join(processed_lines))
 if __name__ == "__main__":
     main()
