@@ -884,13 +884,13 @@ def main():
     with col2:
         nom = st.text_input("NOM ", value="")
     
-    genre = st.radio("HOMME / FEMME *", ["HOMME", "FEMME"], horizontal=True)
+    genre = st.radio("HOMME / FEMME ", ["HOMME", "FEMME"], horizontal=True)
     
     col3, col4, col5 = st.columns(3)
     with col3:
         taille = st.number_input("TAILLE (cm) ", min_value=100, max_value=250, value=175)
     with col4:
-        poids = st.number_input("POIDS (kg) *", min_value=30, max_value=200, value=70)
+        poids = st.number_input("POIDS (kg) ", min_value=30, max_value=200, value=70)
     with col5:
         age = st.number_input("ÂGE ", min_value=10, max_value=100, value=25)
     
