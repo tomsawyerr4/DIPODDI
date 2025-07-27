@@ -5,10 +5,26 @@ import numpy as np
 from datetime import datetime, timedelta
 import locale
 
+# Configuration robuste de la locale
 try:
-    locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')  # Pour Linux/OSX
-except:
-    locale.setlocale(locale.LC_TIME, 'french')
+    locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
+except locale.Error:
+    try:
+        locale.setlocale(locale.LC_TIME, 'fr_FR')
+    except locale.Error:
+        locale.setlocale(locale.LC_TIME, 'fr')
+    finally:
+        # Dictionnaire de traduction manuelle au cas où
+        DAY_TRANSLATIONS = {
+            'Monday': 'Lundi',
+            'Tuesday': 'Mardi',
+            'Wednesday': 'Mercredi',
+            'Thursday': 'Jeudi',
+            'Friday': 'Vendredi',
+            'Saturday': 'Samedi',
+            'Sunday': 'Dimanche'
+        }
+
 def get_specificite_weights(poste, profil, programme):
     weights = {
         "GARDIENS": {
@@ -941,20 +957,17 @@ def main():
     nbr_seances = len(jours_disponibles)
     if len(jours_disponibles) < 3:
         st.warning("Veuillez sélectionner au moins 3 jours.")
-    
-    if st.button("Générer le programme du mois"):
+        if st.button("Générer le programme du mois"):
         st.success(f"Programme généré pour {prenom}")
         if len(jours_disponibles) >= 3:
             weights = get_specificite_weights(poste, profil, programme)
             
             # Définir la date de début (aujourd'hui ou lundi prochain)
             today = datetime.now()
-            start_date = today + timedelta(days=(7 - today.weekday()))  # Prochain lundi
+            start_date = today + timedelta(days=(0 - today.weekday()))  # Lundi de cette semaine
             
             for semaine in range(1, 5):
                 current_specificite = specificite if semaine == 1 else choose_specificite(weights, specificite)
-                
-                # Afficher la spécificité de la semaine
                 st.markdown(f"### Semaine {semaine} - {current_specificite}")
                 
                 resultat = programme_semaine_utilisateur(
@@ -964,33 +977,32 @@ def main():
                     niveau=niveau
                 )
                 
-                # Traitement des jours avec dates et mentions de match
+                # Traitement des jours avec dates
                 lines = resultat.split('\n')
                 processed_lines = []
                 
-                # Calcul des dates pour la semaine en cours
-                week_dates = [start_date + timedelta(days=(i + (semaine-1)*7)) for i in range(7)]
-                
                 for line in lines:
-                    # Remplacer les jours par leur version datée
                     for i, jour in enumerate(jours_disponibles):
                         if f"Jour {i+1}" in line:
-                            date_index = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"].index(jour)
-                            current_date = week_dates[date_index]
-                            date_str = current_date.strftime("%A %d/%m/%Y").capitalize()
+                            # Calcul de la date
+                            jours_semaine = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"]
+                            date_index = jours_semaine.index(jour)
+                            current_date = start_date + timedelta(days=date_index + (semaine-1)*7)
                             
-                            # Ajouter la mention "jour de match" si nécessaire
+                            # Formatage de la date
+                            try:
+                                date_str = current_date.strftime("%A %d/%m/%Y").capitalize()
+                            except:
+                                # Fallback si la locale ne fonctionne pas
+                                english_day = current_date.strftime("%A")
+                                date_str = DAY_TRANSLATIONS.get(english_day, english_day) + current_date.strftime(" %d/%m/%Y")
+                            
                             match_str = " (jour de match)" if jour in jours_match else ""
                             line = line.replace(f"Jour {i+1}", f"{date_str}{match_str}")
                             break
                     
                     processed_lines.append(line)
                 
-                # Reconstituer le texte avec les modifications
-                resultat_avec_dates = '\n'.join(processed_lines)
-                display_program(resultat_avec_dates)
-                
-                # Préparation pour la semaine suivante
-                start_date += timedelta(days=7)
+                display_program('\n'.join(processed_lines))
 if __name__ == "__main__":
     main()
