@@ -856,46 +856,6 @@ def display_program(content):
         else:
             st.markdown(line)
 
-
-    
-"""def display_program(content):
-    # Séparer le contenu en lignes
-    lines = content.split('\n')
-    
-    # Traiter chaque ligne
-    for line in lines:
-        # Détecter les liens
-        match = re.search(r'(https?://\S+)', line)
-        
-        if match:
-            # Ligne avec lien - afficher "Vidéo" centré et cliquable
-            url = match.group(0)
-            st.markdown(
-                f'<div style="text-align: center; margin: 10px 0;">'
-                f'<a href="{url}" style="color: blue; text-decoration: none;">Vidéo</a>'
-                f'</div>',
-                unsafe_allow_html=True
-            )
-        elif "Echauffement" in line:
-            # Échauffement - texte centré avec soulignement
-            st.markdown(
-                f'<div style="text-align: center; margin: 10px 0; border-bottom: 1px solid black; '
-                f'padding-bottom: 5px;">{line}</div>',
-                unsafe_allow_html=True
-            )
-        elif line.strip() and (line.isupper() or line.startswith("Jour") or line.startswith("PARTIE BONUS")):
-            # Titres en gras et centrés
-            st.markdown(
-                f'<div style="text-align: center; margin: 10px 0; font-weight: bold;">{line}</div>',
-                unsafe_allow_html=True
-            )
-        else:
-            # Texte normal centré
-            st.markdown(
-                f'<div style="text-align: center; margin: 5px 0;">{line}</div>',
-                unsafe_allow_html=True
-            )"""
-
 def mettre_a_jour_specificite(programme):
     if programme == 'MUSCULATION EN SALLE':
         return ["ENDURANCE DE FORCE", "FORCE MAX", "MASSE MUSCULAIRE", 
