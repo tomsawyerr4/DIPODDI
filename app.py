@@ -818,8 +818,8 @@ def choose_specificite(weights, current_specificite):
     
     
     # Normalise les poids
-    total = sum(filtered_weights.values())
-    normalized = {k: v/total for k, v in filtered_weights.items()}
+    total = sum(weights.values())
+    normalized = {k: v/total for k, v in weights.items()}
     
     # Choisit une spécificité aléatoire selon les poids
     choices = list(normalized.keys())
