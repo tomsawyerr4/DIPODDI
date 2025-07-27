@@ -816,11 +816,6 @@ def choose_specificite(weights, current_specificite):
     if not weights:
         return current_specificite
     
-    # Retire la spécificité actuelle pour éviter les répétitions
-    filtered_weights = {k: v for k, v in weights.items() if k != current_specificite}
-    
-    if not filtered_weights:
-        return current_specificite
     
     # Normalise les poids
     total = sum(filtered_weights.values())
@@ -842,7 +837,7 @@ def display_program(content):
         # Détecter les liens vidéo
         match = re.search(r'(https?://\S+)', line)
         if match:
-            st.markdown(f"[Vidéo démo ↗]({match.group(0)})")
+            st.markdown(f"[Vidéo ↗]({match.group(0)})")
         # Détecter les lignes de jour
         elif any(jour in line for jour in ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]):
             if "jour de match" in line:
