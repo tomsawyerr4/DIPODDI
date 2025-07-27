@@ -874,9 +874,31 @@ def mettre_a_jour_specificite(programme):
 
 def main():
     st.title("Générateur de Programme Sportif Personnalisé DIPODDI")
-
-    prenom = st.text_input("Prénom :", value="user")
-
+    
+    # Nouvelle section: Coordonnées
+    st.header("VEUILLEZ SAISIR VOS COORDONNÉES")
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        prenom = st.text_input("PRÉNOM ", value="")
+    with col2:
+        nom = st.text_input("NOM ", value="")
+    
+    genre = st.radio("SEXE ", ["HOMME", "FEMME"], horizontal=True)
+    
+    col3, col4, col5 = st.columns(3)
+    with col3:
+        taille = st.number_input("TAILLE (cm) ", min_value=100, max_value=250, value=175)
+    with col4:
+        poids = st.number_input("POIDS (kg) ", min_value=30, max_value=200, value=70)
+    with col5:
+        age = st.number_input("ÂGE ", min_value=10, max_value=100, value=25)
+    
+    email = st.text_input("EMAIL ", value="")
+        
+    # Ancienne section (le reste de votre formulaire)
+    st.header("VOS PRÉFÉRENCES SPORTIVES")
+    
     discipline = st.selectbox("Quel est votre discipline ?", ["FOOTBALL", "FUTSAL"])
     poste = st.selectbox("Quel est votre poste ?", ["GARDIENS", "DÉFENSEURS", "MILIEUX", "ATTAQUANTS"])
 
@@ -908,7 +930,7 @@ def main():
 
     specificites = mettre_a_jour_specificite(programme)
     specificite = st.selectbox("Spécificité :", specificites)
-    
+    #nbr_seances = st.slider("Nombre de séances par semaine :", min_value=3, max_value=7, value=4)
     est_dans_club = st.radio("Êtes-vous dans un club ?", ["OUI", "NON"])
     
     jours_match = []
@@ -919,18 +941,13 @@ def main():
             default=[]
         )
     
-    # Exclure les jours de match des jours disponibles pour l'entraînement
-    jours_disponibles_entrainement = [jour for jour in ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"] 
-                                    if jour not in jours_match]
-    
-    jours_entrainement = st.multiselect(
+    jours_disponibles = st.multiselect(
         "Quels jours voulez-vous effectuer votre programme DIPODDI ? (2 jours min)",
-        jours_disponibles_entrainement,
-        default=jours_disponibles_entrainement[:3] if len(jours_disponibles_entrainement) >= 3 else jours_disponibles_entrainement
+        ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"],
+        default=["LUNDI", "MERCREDI", "VENDREDI"]
     )
-    
-    nbr_seances = len(jours_entrainement)
-    if len(jours_entrainement) < 2:
+    nbr_seances = len(jours_disponibles)
+    if len(jours_disponibles) < 2:
         st.warning("Veuillez sélectionner au moins 2 jours.")    
     if st.button("Générer le programme du mois"):
         st.success(f"Programme généré pour {prenom if prenom else 'User'}")
