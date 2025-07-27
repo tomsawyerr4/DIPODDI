@@ -22,16 +22,189 @@ def get_specificite_weights(poste, profil, programme):
                     'RÉPÉTITIONS DES EFFORTS': 45,
                     'FORCE EXPLOSIVE': 50
                 },
-                # Ajoutez les autres programmes de la même manière
+                'MUSCULATION EN SALLE (Specifique)': {
+                    'BRAS': 30,
+                    'DOS': 25,
+                    'ÉPAULE': 20,
+                    'PECTORAUX': 15,
+                    'JAMBES': 40
+                },
+                'MUSCULATION EN SALLE + CARDIO(Specifique)': {
+                    'BRAS': 25,
+                    'DOS': 30,
+                    'ÉPAULE': 20,
+                    'PECTORAUX': 15,
+                    'JAMBES': 40
+                },
+                'CARDIO EN SALLE': {
+                    'PUISSANCE': 40,
+                    'ENDURANCE': 20,
+                    'RÉSISTANCE': 20,
+                    'SPRINT': 50,
+                    'PERTE DE POIDS': 20
+                },
+                'PROGRAMME DEHORS': {
+                    'PERTE DE POIDS': 40,
+                    'PUISSANCE': 50,
+                    'REMISE EN FORME': 20,
+                    'BOX TO BOX': 20
+                },
+                'PROGRAMME MAISON': {
+                    'Perte DE POIDS': 60,
+                    'RENFORCEMENT': 30,
+                    'BRULER DES CALORIES': 40
+                }
             },
             "PIEUVRE (HABILE)": {
-                # Structure similaire pour PIEUVRE
+                'MUSCULATION EN SALLE': {
+                    'ENDURANCE DE FORCE': 40,
+                    'FORCE MAX': 25,
+                    'MASSE MUSCULAIRE': 30,
+                    'RÉPÉTITIONS DES EFFORTS': 40,
+                    'FORCE EXPLOSIVE': 25
+                },
+                'MUSCULATION EN SALLE + CARDIO(Generale)': {
+                    'ENDURANCE DE FORCE': 50,
+                    'FORCE MAX': 50,
+                    'PERTE DE POIDS': 20,
+                    'REMISE EN FORME': 20,
+                    'RÉPÉTITIONS DES EFFORTS': 50,
+                    'FORCE EXPLOSIVE': 30
+                },
+                'MUSCULATION EN SALLE (Specifique)': {
+                    'BRAS': 35,
+                    'DOS': 30,
+                    'ÉPAULE': 25,
+                    'PECTORAUX': 20,
+                    'JAMBES': 35
+                },
+                'MUSCULATION EN SALLE + CARDIO(Specifique)': {
+                    'BRAS': 30,
+                    'DOS': 35,
+                    'ÉPAULE': 25,
+                    'PECTORAUX': 20,
+                    'JAMBES': 35
+                },
+                'CARDIO EN SALLE': {
+                    'PUISSANCE': 50,
+                    'ENDURANCE': 40,
+                    'RÉSISTANCE': 60,
+                    'SPRINT': 30,
+                    'PERTE DE POIDS': 20
+                },
+                'PROGRAMME DEHORS': {
+                    'PERTE DE POIDS': 50,
+                    'PUISSANCE': 50,
+                    'REMISE EN FORME': 20,
+                    'BOX TO BOX': 30
+                },
+                'PROGRAMME MAISON': {
+                    'Perte DE POIDS': 70,
+                    'RENFORCEMENT': 25,
+                    'BRULER DES CALORIES': 35
+                }
             },
-            # Ajoutez les autres profils
+            "ARAIGNEE (MALIN)": {
+                'MUSCULATION EN SALLE': {
+                    'ENDURANCE DE FORCE': 25,
+                    'FORCE MAX': 20,
+                    'MASSE MUSCULAIRE': 15,
+                    'RÉPÉTITIONS DES EFFORTS': 40,
+                    'FORCE EXPLOSIVE': 40
+                },
+                'MUSCULATION EN SALLE + CARDIO(Generale)': {
+                    'ENDURANCE DE FORCE': 50,
+                    'FORCE MAX': 30,
+                    'PERTE DE POIDS': 20,
+                    'REMISE EN FORME': 20,
+                    'RÉPÉTITIONS DES EFFORTS': 60,
+                    'FORCE EXPLOSIVE': 40
+                },
+                'MUSCULATION EN SALLE (Specifique)': {
+                    'BRAS': 40,
+                    'DOS': 25,
+                    'ÉPAULE': 30,
+                    'PECTORAUX': 15,
+                    'JAMBES': 30
+                },
+                'MUSCULATION EN SALLE + CARDIO(Specifique)': {
+                    'BRAS': 35,
+                    'DOS': 30,
+                    'ÉPAULE': 25,
+                    'PECTORAUX': 20,
+                    'JAMBES': 35
+                },
+                'CARDIO EN SALLE': {
+                    'PUISSANCE': 30,
+                    'ENDURANCE': 40,
+                    'RÉSISTANCE': 45,
+                    'SPRINT': 50,
+                    'PERTE DE POIDS': 20
+                },
+                'PROGRAMME DEHORS': {
+                    'PERTE DE POIDS': 30,
+                    'PUISSANCE': 30,
+                    'REMISE EN FORME': 20,
+                    'BOX TO BOX': 40
+                },
+                'PROGRAMME MAISON': {
+                    'Perte DE POIDS': 80,
+                    'RENFORCEMENT': 20,
+                    'BRULER DES CALORIES': 30
+                }
+            },
+            "CHAT (EXPLOSIF)": {
+                'MUSCULATION EN SALLE': {
+                    'ENDURANCE DE FORCE': 45,
+                    'FORCE MAX': 25,
+                    'MASSE MUSCULAIRE': 20,
+                    'RÉPÉTITIONS DES EFFORTS': 25,
+                    'FORCE EXPLOSIVE': 35
+                },
+                'MUSCULATION EN SALLE + CARDIO(Generale)': {
+                    'ENDURANCE DE FORCE': 40,
+                    'FORCE MAX': 35,
+                    'PERTE DE POIDS': 30,
+                    'REMISE EN FORME': 30,
+                    'RÉPÉTITIONS DES EFFORTS': 50,
+                    'FORCE EXPLOSIVE': 50
+                },
+                'MUSCULATION EN SALLE (Specifique)': {
+                    'BRAS': 25,
+                    'DOS': 30,
+                    'ÉPAULE': 20,
+                    'PECTORAUX': 15,
+                    'JAMBES': 45
+                },
+                'MUSCULATION EN SALLE + CARDIO(Specifique)': {
+                    'BRAS': 20,
+                    'DOS': 35,
+                    'ÉPAULE': 25,
+                    'PECTORAUX': 15,
+                    'JAMBES': 40
+                },
+                'CARDIO EN SALLE': {
+                    'PUISSANCE': 40,
+                    'ENDURANCE': 30,
+                    'RÉSISTANCE': 50,
+                    'SPRINT': 30,
+                    'PERTE DE POIDS': 20
+                },
+                'PROGRAMME DEHORS': {
+                    'PERTE DE POIDS': 40,
+                    'PUISSANCE': 50,
+                    'REMISE EN FORME': 20,
+                    'BOX TO BOX': 20
+                },
+                'PROGRAMME MAISON': {
+                    'Perte DE POIDS': 60,
+                    'RENFORCEMENT': 35,
+                    'BRULER DES CALORIES': 45
+                }
+            }
         },
-        # Ajoutez les autres postes (DÉFENSEURS, MILIEUX, ATTAQUANTS)
-    }
-    
+        # Vous pourrez ajouter les autres postes (DÉFENSEURS, MILIEUX, ATTAQUANTS) plus tard
+    }    
     return (weights.get(poste, {}).get(profil, {}).get(programme, {}))
 
 def choose_specificite(weights, current_specificite):
