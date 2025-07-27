@@ -41,41 +41,6 @@ def display_program(content):
                 unsafe_allow_html=True
             )
             
-def make_clickable_preserve_newlines(text):
-    # Divise le texte en lignes tout en conservant les sauts de ligne
-    lines = text.split('\n')
-    
-    # Traite chaque ligne séparément
-    processed_lines = []
-    for line in lines:
-        # Trouve tous les URLs dans la ligne
-        urls = re.findall(r'(https?://\S+)', line)
-        # Remplace chaque URL par un lien markdown
-        for url in urls:
-            line = line.replace(url, f"\n[Voir la vidéo]({url})\n")
-        processed_lines.append(line)
-    
-    # Recombine les lignes avec les sauts de ligne originaux
-    return '\n'.join(processed_lines)
-    
-def make_links_clickable(text):
-    # Trouve tous les URLs dans le texte
-    urls = re.findall(r'(https?://\S+)', text)
-    
-    # Remplace chaque URL par un lien markdown
-    for url in urls:
-        text = text.replace(url, f"[Voir la vidéo]({url})")
-    
-    return text
-def make_contextual_links(text):
-    # Pattern pour détecter les URLs précédées d'une description
-    pattern = re.compile(r'(Pour voir l\'exercice en Vidéo): (https?://\S+)')
-    
-    def replace_match(match):
-        return f"{match.group(1)}: [cliquez ici ]({match.group(2)})"
-    
-    return pattern.sub(replace_match, text)
-
 def mettre_a_jour_specificite(programme):
     if programme == 'MUSCULATION EN SALLE':
         return ["ENDURANCE DE FORCE", "FORCE MAX", "MASSE MUSCULAIRE", 
@@ -97,17 +62,6 @@ def mettre_a_jour_specificite(programme):
         return ["PERTE DE POIDS", "PUISSANCE", "REMISE EN FORME", "BOX TO BOX"]
     return []
 
-
-def rendre_liens_cliquables(texte):
-    return re.sub(r'(https?://\S+)', r'[\1](\1)', texte)
-
-
-def formatter_texte_avec_liens(texte):
-    # Convertir les liens en format Markdown cliquable
-    texte = re.sub(r'(https?://[^\s]+)', r'[\1](\1)', texte)
-    # Remplacer les retours à la ligne simples par deux espaces + retour à la ligne (Markdown)
-    texte = texte.replace('\n', '  \n')
-    return texte
 def main():
     st.title("Générateur de Programme Sportif Personnalisé DIPODDI")
 
