@@ -857,8 +857,8 @@ def display_program(content):
             st.markdown(line)
 
 
- '''   
-def display_program(content):
+    
+'''def display_program(content):
     # Séparer le contenu en lignes
     lines = content.split('\n')
     
