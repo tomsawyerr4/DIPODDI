@@ -858,7 +858,7 @@ def display_program(content):
 
 
     
-'''def display_program(content):
+"""def display_program(content):
     # Séparer le contenu en lignes
     lines = content.split('\n')
     
@@ -894,8 +894,8 @@ def display_program(content):
             st.markdown(
                 f'<div style="text-align: center; margin: 5px 0;">{line}</div>',
                 unsafe_allow_html=True
-            )
-     '''       
+            )"""
+
 def mettre_a_jour_specificite(programme):
     if programme == 'MUSCULATION EN SALLE':
         return ["ENDURANCE DE FORCE", "FORCE MAX", "MASSE MUSCULAIRE", 
