@@ -2,3 +2,4 @@ streamlit
 fpdf
 pandas
 numpy
+locale
