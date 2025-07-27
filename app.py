@@ -884,7 +884,7 @@ def main():
     with col2:
         nom = st.text_input("NOM ", value="")
     
-    genre = st.radio("HOMME / FEMME ", ["HOMME", "FEMME"], horizontal=True)
+    genre = st.radio("SEXE ", ["HOMME", "FEMME"], horizontal=True)
     
     col3, col4, col5 = st.columns(3)
     with col3:
