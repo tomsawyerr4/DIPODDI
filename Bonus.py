@@ -61,15 +61,15 @@ def ProgammeBonus(niveau):
 
     for i in range(nbr_series):
         if type_exercice == 'ABDOS':
-            video_choice += random.choice(ABDOS)+'\n' + f'{type_exercice} \n{video_choice}{nbr_series} séries / {nbr_repititions} / {recuperation} sec de récupération'
+            video_choice += random.choice(ABDOS)+'\n' + f'{nbr_series} séries / {nbr_repititions} / {recuperation} sec de récupération \n'
         elif type_exercice == 'POMPES':
-            video_choice += random.choice(POMPES)+'\n' + f'{type_exercice} \n{video_choice}{nbr_series} séries / {nbr_repititions} / {recuperation} sec de récupération'
+            video_choice += random.choice(POMPES)+'\n' + f'{nbr_series} séries / {nbr_repititions} / {recuperation} sec de récupération \n'
         else:
-            video_choice += random.choice(GAINAGES)+'\n' + f'\n{nbr_series} séries / {nbr_repititions} / {recuperation} sec de récupération'
+            video_choice += random.choice(GAINAGES)+'\n' + f'\n{nbr_series} séries / {nbr_repititions} / {recuperation} sec de récupération \n'
         
         
     
-    #exercice = f'{type_exercice} \n{video_choice}{nbr_series} séries / {nbr_repititions} / {recuperation} sec de récupération'
+    exercice = f'{type_exercice} \n{video_choice}
 
     # deuxieme_bonus = random.choice([0, 1])
     # if deuxieme_bonus == 1:
@@ -78,5 +78,5 @@ def ProgammeBonus(niveau):
     # else:
     #     pass
 
-    return video_choice
+    return exercice
 
