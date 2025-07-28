@@ -66,8 +66,7 @@ def ProgammeBonus(niveau):
             video_choice += random.choice(POMPES)+'\n'
         else:
             video_choice += random.choice(GAINAGES)+'\n'
-
-    exercice = f'{type_exercice} \n{video_choice}{nbr_series} séries / {nbr_repititions} / {recuperation} sec de récupération'
+        exercice = f'{type_exercice} \n{video_choice}{nbr_series} séries / {nbr_repititions} / {recuperation} sec de récupération'
 
     # deuxieme_bonus = random.choice([0, 1])
     # if deuxieme_bonus == 1:
