@@ -145,7 +145,7 @@ def musculationSalle(type,objective,programme):
 
         
         
-    exercices_totals = objective + '\n' + echauffement + '\n' + exercice
+    exercices_totals = echauffement + '\n' + exercice
     return exercices_totals
 
 
