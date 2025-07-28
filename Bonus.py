@@ -69,7 +69,7 @@ def ProgammeBonus(niveau):
         
         
     
-    exercice = f'{type_exercice} \n{video_choice}
+    exercice = f'{type_exercice} \n{video_choice}'
 
     # deuxieme_bonus = random.choice([0, 1])
     # if deuxieme_bonus == 1:
@@ -77,6 +77,5 @@ def ProgammeBonus(niveau):
     #     exercice += ProgammeBonus(niveau,0)
     # else:
     #     pass
-
     return exercice
 
