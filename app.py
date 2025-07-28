@@ -961,7 +961,11 @@ def main():
             for semaine in range(1, 5):
                 current_specificite = specificite if semaine == 1 else choose_specificite(weights, specificite)
                 st.markdown(f"### Semaine {semaine} - {current_specificite}")
-                st.caption(f"Du {start_date.strftime('%A %d/%m/%Y')} au {(start_date + timedelta(days=6)).strftime('%A %d/%m/%Y')}")
+                
+                # Traduction des dates de période
+                debut_fr = JOURS_TRADUCTION[start_date.strftime("%A")] + start_date.strftime(" %d/%m/%Y")
+                fin_fr = JOURS_TRADUCTION[(start_date + timedelta(days=6)).strftime("%A")] + (start_date + timedelta(days=6)).strftime(" %d/%m/%Y")
+                st.caption(f"Du {debut_fr} au {fin_fr}")
                 
                 resultat = programme_semaine_utilisateur(
                     choix=programme,
