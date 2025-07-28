@@ -933,7 +933,8 @@ def main():
     #nbr_seances = st.slider("Nombre de séances par semaine :", min_value=3, max_value=7, value=4)
     est_dans_club = st.radio("Êtes-vous dans un club ?", ["OUI", "NON"])
     
-    jours_match = []    if est_dans_club == "OUI":
+    jours_match = []    
+    if est_dans_club == "OUI":
         jours_match = st.multiselect(
             "Quels jours avez-vous match ?",
             ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"],
