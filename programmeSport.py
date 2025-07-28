@@ -176,7 +176,7 @@ def programme_seance(choix,objective_kine,theme,niveau):
     else:
         pass
     
-    return objective + '\n' + programme_seance
+    return theme + '\n' + programme_seance
 
 def supprimer_doublons_terminer_par(programme):
     """
