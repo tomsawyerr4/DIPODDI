@@ -175,7 +175,8 @@ def programme_seance(choix,objective_kine,theme,niveau):
         programme_seance += f'PARTIE BONUS: \n {exercices_Bonus}'
     else:
         pass
-    return programme_seance
+    
+    return objective + '\n' + programme_seance
 
 def supprimer_doublons_terminer_par(programme):
     """
