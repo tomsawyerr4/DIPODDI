@@ -933,8 +933,7 @@ def main():
     #nbr_seances = st.slider("Nombre de séances par semaine :", min_value=3, max_value=7, value=4)
     est_dans_club = st.radio("Êtes-vous dans un club ?", ["OUI", "NON"])
     
-    jours_match = []    
-    if est_dans_club == "OUI":
+    jours_match = []        if est_dans_club == "OUI":
         jours_match = st.multiselect(
             "Quels jours avez-vous match ?",
             ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"],
@@ -955,73 +954,62 @@ def main():
     if len(jours_disponibles) < 2:
         st.warning("Veuillez sélectionner au moins 2 jours (hors jours de match).")
     
-if st.button("Générer le programme du mois"):
-    st.success(f"Programme généré pour {prenom if prenom else 'User'}")
-    if len(jours_disponibles) >= 2:
-        weights = get_specificite_weights(poste, profil, programme)
-        
-        today = datetime.now()
-        start_date = today
-        
-        for semaine in range(1, 5):
-            current_specificite = specificite if semaine == 1 else choose_specificite(weights, specificite)
-            st.markdown(f"### Semaine {semaine} - {current_specificite}")
+    if st.button("Générer le programme du mois"):
+        st.success(f"Programme généré pour {prenom if prenom else 'User'}")
+        if len(jours_disponibles) >= 2:
+            weights = get_specificite_weights(poste, profil, programme)
             
-            # Affichage de la période
-            debut_fr = JOURS_TRADUCTION[start_date.strftime("%A")] + start_date.strftime(" %d/%m/%Y")
-            fin_fr = JOURS_TRADUCTION[(start_date + timedelta(days=6)).strftime("%A")] + (start_date + timedelta(days=6)).strftime(" %d/%m/%Y")
-            st.caption(f"Du {debut_fr} au {fin_fr}")
+            today = datetime.now()
+            start_date = today
             
-            # Génération du programme
-            resultat = programme_semaine_utilisateur(
-                choix=programme,
-                theme_principal=current_specificite,
-                nbr_seances=nbr_seances,
-                niveau=niveau
-            )
-            
-            # Traitement des lignes avec tri chronologique
-            lines = resultat.split('\n')
-            processed_lines = []
-            
-            # Création d'une liste de tous les jours pertinents (entraînement + match)
-            jours_semaine_complete = []
-            
-            # Ajout des jours d'entraînement
-            for i, jour in enumerate(jours_disponibles):
-                date_index = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"].index(jour)
-                day_offset = (date_index - today.weekday()) % 7
-                current_date = start_date + timedelta(days=day_offset + (semaine-1)*7)
-                day_fr = JOURS_TRADUCTION[current_date.strftime("%A")]
-                date_str = f"{day_fr} {current_date.strftime('%d/%m/%Y')}"
+            for semaine in range(1, 5):
+                current_specificite = specificite if semaine == 1 else choose_specificite(weights, specificite)
+                st.markdown(f"### Semaine {semaine} - {current_specificite}")
                 
-                # Trouver la ligne correspondante dans le résultat
+                # Affichage de la période
+                debut_fr = JOURS_TRADUCTION[start_date.strftime("%A")] + start_date.strftime(" %d/%m/%Y")
+                fin_fr = JOURS_TRADUCTION[(start_date + timedelta(days=6)).strftime("%A")] + (start_date + timedelta(days=6)).strftime(" %d/%m/%Y")
+                st.caption(f"Du {debut_fr} au {fin_fr}")
+                
+                # Génération du programme
+                resultat = programme_semaine_utilisateur(
+                    choix=programme,
+                    theme_principal=current_specificite,
+                    nbr_seances=nbr_seances,
+                    niveau=niveau
+                )
+                
+                # Traitement des lignes
+                lines = resultat.split('\n')
+                processed_lines = []
+                
+                # Ajout des jours de match en premier
+                for jour in jours_match:
+                    date_index = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"].index(jour)
+                    day_offset = (date_index - today.weekday()) % 7
+                    current_date = start_date + timedelta(days=day_offset + (semaine-1)*7)
+                    day_fr = JOURS_TRADUCTION[current_date.strftime("%A")]
+                    date_str = f"{day_fr} {current_date.strftime('%d/%m/%Y')} (jour de match)"
+                    processed_lines.append(date_str)
+                    processed_lines.append("→ Repos (match prévu)")
+                
+                # Ajout des jours d'entraînement
                 for line in lines:
-                    if f"Jour {i+1}" in line:
-                        processed_line = line.replace(f"Jour {i+1}", date_str)
-                        jours_semaine_complete.append((current_date, processed_line))
-                        break
-            
-            # Ajout des jours de match
-            for jour in jours_match:
-                date_index = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"].index(jour)
-                day_offset = (date_index - today.weekday()) % 7
-                current_date = start_date + timedelta(days=day_offset + (semaine-1)*7)
-                day_fr = JOURS_TRADUCTION[current_date.strftime("%A")]
-                date_str = f"{day_fr} {current_date.strftime('%d/%m/%Y')} (jour de match)"
-                jours_semaine_complete.append((current_date, date_str))
-                jours_semaine_complete.append((current_date, "→ Repos (match prévu)"))
-            
-            # Tri chronologique
-            jours_semaine_complete.sort(key=lambda x: x[0])
-            
-            # Ajout au résultat final
-            for date, line in jours_semaine_complete:
-                processed_lines.append(line)
-            
-            display_program('\n'.join(processed_lines))
-            
-            start_date += timedelta(days=7)
-            
+                    for i, jour in enumerate(jours_disponibles):
+                        if f"Jour {i+1}" in line:
+                            date_index = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"].index(jour)
+                            day_offset = (date_index - today.weekday()) % 7
+                            current_date = start_date + timedelta(days=day_offset + (semaine-1)*7)
+                            day_fr = JOURS_TRADUCTION[current_date.strftime("%A")]
+                            date_str = f"{day_fr} {current_date.strftime('%d/%m/%Y')}"
+                            line = line.replace(f"Jour {i+1}", date_str)
+                            processed_lines.append(line)
+                            break
+                    else:
+                        processed_lines.append(line)
+                
+                display_program('\n'.join(processed_lines))
+                
+                start_date += timedelta(days=7)
 if __name__ == "__main__":
     main()
