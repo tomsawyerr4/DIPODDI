@@ -1021,5 +1021,7 @@ if st.button("Générer le programme du mois"):
             
             display_program('\n'.join(processed_lines))
             
-            start_date += timedelta(days=7)if __name__ == "__main__":
+            start_date += timedelta(days=7)
+            
+if __name__ == "__main__":
     main()
