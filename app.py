@@ -953,7 +953,7 @@ def main():
     
     nbr_seances = len(jours_disponibles)
     if len(jours_disponibles) < 2:
-        st.warning("Veuillez sélectionner au moins 2 jours (hors jours de match).")
+            st.warning("Veuillez sélectionner au moins 2 jours (hors jours de match).")
     if st.button("Générer le programme du mois"):
         st.success(f"Programme généré pour {prenom if prenom else 'User'}")
         if len(jours_disponibles) >= 2:
@@ -966,13 +966,16 @@ def main():
                 current_specificite = specificite if semaine == 1 else choose_specificite(weights, specificite)
                 st.markdown(f"### Semaine {semaine} - {current_specificite}")
                 
+                # Calcul des dates
                 semaine_start = start_date + timedelta(weeks=semaine-1)
                 semaine_end = semaine_start + timedelta(days=6)
                 
+                # Affichage période
                 debut_fr = JOURS_TRADUCTION[semaine_start.strftime("%A")] + semaine_start.strftime(" %d/%m/%Y")
                 fin_fr = JOURS_TRADUCTION[semaine_end.strftime("%A")] + semaine_end.strftime(" %d/%m/%Y")
                 st.caption(f"Du {debut_fr} au {fin_fr}")
                 
+                # Génération programme
                 resultat = programme_semaine_utilisateur(
                     choix=programme,
                     theme_principal=current_specificite,
@@ -980,27 +983,23 @@ def main():
                     niveau=niveau
                 )
                 
-                # Split du résultat par séance
-                seances = resultat.split('\n\n')  # Supposons que chaque séance est séparée par deux sauts de ligne
+                # Séparation du contenu par séance
+                seances = [s for s in resultat.split('Jour ') if s.strip()][1:]  # Ignorer première partie vide
                 
-                processed_lines = []
-                jours_semaine = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"]
-                
-                for i, jour in enumerate(jours_semaine):
+                # Traitement par jour
+                for i, jour in enumerate(["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"]):
                     current_date = semaine_start + timedelta(days=i)
                     day_fr = JOURS_TRADUCTION[current_date.strftime("%A")]
                     date_str = f"{day_fr} {current_date.strftime('%d/%m/%Y')}"
                     
                     if jour in jours_match:
-                        processed_lines.append(f"{date_str} (jour de match) 🏆")
-                        processed_lines.append("→ Repos (match prévu)\n")
+                        st.markdown(f"**{date_str} (jour de match)** 🏆")
+                        st.markdown("→ *Repos (match prévu)*")
                     elif jour in jours_disponibles:
-                        jour_num = jours_disponibles.index(jour) + 1
-                        if jour_num <= len(seances):
-                            processed_lines.append(f"{date_str} : {programme}")
-                            processed_lines.append(seances[jour_num-1])  # Ajoute le contenu de la séance
-                            processed_lines.append("")  # Ligne vide pour l'espacement
-                
-                display_program('\n'.join(processed_lines))
+                        jour_num = jours_disponibles.index(jour)
+                        if jour_num < len(seances):
+                            st.markdown(f"**{date_str}**")
+                            # Afficher le contenu complet de la séance
+                            display_seance(seances[jour_num].split('\n', 1)[1])  # Enlève le numéro de jour
 if __name__ == "__main__":
     main()
