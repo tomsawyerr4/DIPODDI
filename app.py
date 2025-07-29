@@ -872,6 +872,23 @@ def mettre_a_jour_specificite(programme):
         return ["PERTE DE POIDS", "PUISSANCE", "REMISE EN FORME", "BOX TO BOX"]
     return []
 
+
+def display_seance(contenu):
+    lines = contenu.split('\n')
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+            
+        if line.startswith("Echauffement"):
+            st.markdown(f"*{line}*")
+        elif line.isupper() or line.startswith("PARTIE BONUS"):
+            st.markdown(f"**{line}**")
+        elif re.match(r'https?://\S+', line):  # Lien vidéo
+            st.markdown(f"[Vidéo démo ↗]({line})")
+        else:
+            st.markdown(line)
+
 def main():
     st.title("Générateur de Programme Sportif Personnalisé DIPODDI")
     
