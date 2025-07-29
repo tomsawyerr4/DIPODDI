@@ -885,7 +885,7 @@ def display_seance(contenu):
         elif line.isupper() or line.startswith("PARTIE BONUS"):
             st.markdown(f"**{line}**")
         elif re.match(r'https?://\S+', line):  # Lien vidéo
-            st.markdown(f"[Vidéo démo ↗]({line})")
+            st.markdown(f"[Vidéo↗]({line})")
         else:
             st.markdown(line)
 
