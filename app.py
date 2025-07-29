@@ -1010,7 +1010,7 @@ def main():
                     date_str = f"{day_fr} {current_date.strftime('%d/%m/%Y')}"
                     
                     if jour in jours_match:
-                        st.markdown("_____________________")
+                        #st.markdown("_____________________")
                         st.markdown(f"**{date_str} (jour de match)** ")
                         st.markdown(" *Pas d seance (match prévu)*")
                         st.markdown("_____________________")
