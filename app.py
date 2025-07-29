@@ -1012,7 +1012,7 @@ def main():
                     if jour in jours_match:
                         #st.markdown("_____________________")
                         st.markdown(f"**{date_str} (jour de match)** ")
-                        st.markdown(" *Pas d seance (match prévu)*")
+                        st.markdown(" *Pas de seance (match prévu)*")
                         st.markdown("_____________________")
                     elif jour in jours_disponibles:
                         jour_num = jours_disponibles.index(jour)
