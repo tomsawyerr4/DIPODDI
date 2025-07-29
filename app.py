@@ -966,16 +966,13 @@ def main():
                 current_specificite = specificite if semaine == 1 else choose_specificite(weights, specificite)
                 st.markdown(f"### Semaine {semaine} - {current_specificite}")
                 
-                # Calcul des dates de début/fin
                 semaine_start = start_date + timedelta(weeks=semaine-1)
                 semaine_end = semaine_start + timedelta(days=6)
                 
-                # Affichage période
                 debut_fr = JOURS_TRADUCTION[semaine_start.strftime("%A")] + semaine_start.strftime(" %d/%m/%Y")
                 fin_fr = JOURS_TRADUCTION[semaine_end.strftime("%A")] + semaine_end.strftime(" %d/%m/%Y")
                 st.caption(f"Du {debut_fr} au {fin_fr}")
                 
-                # Génération programme
                 resultat = programme_semaine_utilisateur(
                     choix=programme,
                     theme_principal=current_specificite,
@@ -983,7 +980,9 @@ def main():
                     niveau=niveau
                 )
                 
-                # Traitement par jour dans l'ordre
+                # Split du résultat par séance
+                seances = resultat.split('\n\n')  # Supposons que chaque séance est séparée par deux sauts de ligne
+                
                 processed_lines = []
                 jours_semaine = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"]
                 
@@ -994,13 +993,13 @@ def main():
                     
                     if jour in jours_match:
                         processed_lines.append(f"{date_str} (jour de match) 🏆")
-                        processed_lines.append("→ Repos (match prévu)")
+                        processed_lines.append("→ Repos (match prévu)\n")
                     elif jour in jours_disponibles:
                         jour_num = jours_disponibles.index(jour) + 1
-                        for line in resultat.split('\n'):
-                            if f"Jour {jour_num}" in line:
-                                processed_lines.append(f"{date_str} : {line.replace(f'Jour {jour_num}', '').strip()}")
-                                break
+                        if jour_num <= len(seances):
+                            processed_lines.append(f"{date_str} : {programme}")
+                            processed_lines.append(seances[jour_num-1])  # Ajoute le contenu de la séance
+                            processed_lines.append("")  # Ligne vide pour l'espacement
                 
                 display_program('\n'.join(processed_lines))
 if __name__ == "__main__":
