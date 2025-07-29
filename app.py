@@ -1010,8 +1010,10 @@ def main():
                     date_str = f"{day_fr} {current_date.strftime('%d/%m/%Y')}"
                     
                     if jour in jours_match:
-                        st.markdown(f"**{date_str} (jour de match)** 🏆")
-                        st.markdown("→ *Repos (match prévu)*")
+                        st.markdown("_____________________")
+                        st.markdown(f"**{date_str} (jour de match)** ")
+                        st.markdown(" *Pas d seance (match prévu)*")
+                        st.markdown("_____________________")
                     elif jour in jours_disponibles:
                         jour_num = jours_disponibles.index(jour)
                         if jour_num < len(seances):
