@@ -960,18 +960,22 @@ def main():
             weights = get_specificite_weights(poste, profil, programme)
             
             today = datetime.now()
-            start_date = today
+            start_date = today - timedelta(days=today.weekday())  # Lundi de la semaine
             
             for semaine in range(1, 5):
                 current_specificite = specificite if semaine == 1 else choose_specificite(weights, specificite)
                 st.markdown(f"### Semaine {semaine} - {current_specificite}")
                 
-                # Affichage de la période
-                debut_fr = JOURS_TRADUCTION[start_date.strftime("%A")] + start_date.strftime(" %d/%m/%Y")
-                fin_fr = JOURS_TRADUCTION[(start_date + timedelta(days=6)).strftime("%A")] + (start_date + timedelta(days=6)).strftime(" %d/%m/%Y")
+                # Calcul des dates de début/fin
+                semaine_start = start_date + timedelta(weeks=semaine-1)
+                semaine_end = semaine_start + timedelta(days=6)
+                
+                # Affichage période
+                debut_fr = JOURS_TRADUCTION[semaine_start.strftime("%A")] + semaine_start.strftime(" %d/%m/%Y")
+                fin_fr = JOURS_TRADUCTION[semaine_end.strftime("%A")] + semaine_end.strftime(" %d/%m/%Y")
                 st.caption(f"Du {debut_fr} au {fin_fr}")
                 
-                # Génération du programme
+                # Génération programme
                 resultat = programme_semaine_utilisateur(
                     choix=programme,
                     theme_principal=current_specificite,
@@ -979,37 +983,25 @@ def main():
                     niveau=niveau
                 )
                 
-                # Traitement des lignes dans l'ordre chronologique
-                lines = resultat.split('\n')
+                # Traitement par jour dans l'ordre
                 processed_lines = []
+                jours_semaine = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"]
                 
-                # Parcourir tous les jours de la semaine dans l'ordre
-                jours_semaine_complete = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"]
-                
-                for i in range(7):  # Pour chaque jour de la semaine
-                    current_jour = jours_semaine_complete[i]
-                    day_offset = (i - today.weekday()) % 7
-                    current_date = start_date + timedelta(days=day_offset + (semaine-1)*7)
+                for i, jour in enumerate(jours_semaine):
+                    current_date = semaine_start + timedelta(days=i)
                     day_fr = JOURS_TRADUCTION[current_date.strftime("%A")]
                     date_str = f"{day_fr} {current_date.strftime('%d/%m/%Y')}"
                     
-                    # Gestion des jours de match
-                    if current_jour in jours_match:
+                    if jour in jours_match:
                         processed_lines.append(f"{date_str} (jour de match) 🏆")
                         processed_lines.append("→ Repos (match prévu)")
-                    
-                    # Gestion des jours d'entraînement
-                    elif current_jour in jours_disponibles:
-                        # Trouver la ligne correspondante dans le résultat
-                        jour_index = jours_disponibles.index(current_jour)
-                        for line in lines:
-                            if f"Jour {jour_index+1}" in line:
-                                line = line.replace(f"Jour {jour_index+1}", date_str)
-                                processed_lines.append(line)
+                    elif jour in jours_disponibles:
+                        jour_num = jours_disponibles.index(jour) + 1
+                        for line in resultat.split('\n'):
+                            if f"Jour {jour_num}" in line:
+                                processed_lines.append(f"{date_str} : {line.replace(f'Jour {jour_num}', '').strip()}")
                                 break
                 
                 display_program('\n'.join(processed_lines))
-                
-                start_date += timedelta(days=7)
 if __name__ == "__main__":
     main()
