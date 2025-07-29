@@ -981,7 +981,7 @@ def main():
             
             for semaine in range(1, 5):
                 current_specificite = specificite if semaine == 1 else choose_specificite(weights, specificite)
-                st.markdown(f"### Semaine {semaine} - {current_specificite}")
+                st.markdown(f"### Semaine {semaine} - {programme}")
                 
                 # Calcul des dates
                 semaine_start = start_date + timedelta(weeks=semaine-1)
