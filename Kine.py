@@ -11,6 +11,11 @@ def programme_kine(objectif):
     duree_mouvement = 30
     duree_recuperation = 20
     video_choix = ''
+    mets = 0
+    if kine == 'MOBILITÉ' :
+        mets = 3
+    else:
+        mets = 4
 
     if objectif == 'General':
         for i in range(nbr_exercices_kine):
@@ -56,7 +61,7 @@ def programme_kine(objectif):
         total_exos += exercice
     else: 
         return 'Choix Invalide'
-    return total_exos
+    return (total_exos, mets)
 
 
 # print(programme_kine('Spécifique'))

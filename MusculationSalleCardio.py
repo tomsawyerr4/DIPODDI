@@ -8,10 +8,12 @@ def musculationSalleCardio(objective,muscle):
     exo2 = ''
     type_exos2 = ''
     lettre = ''
+    mets = 0
 
     if objective == 'ENDURANCE DE FORCE':
         exo1 = musculationSalleSpecifique(muscle,"ENDURANCE DE FORCE")
         type_exos2 = random.choice(['ENDURANCE','RÉSISTANCE'])
+        mets = 19 
         if type_exos2 == 'ENDURANCE':
             # lettre = random.choice(["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O"])
             exo2 = Endurance("A",False)
@@ -22,6 +24,7 @@ def musculationSalleCardio(objective,muscle):
     if objective == 'FORCE MAX':
         exo1 = musculationSalleSpecifique(muscle,"FORCE MAX")
         type_exos2 = 'PUISSANCE'
+        mets = 21
         lettre = random.choice(["A","H","I"]) #"B","C","D","E","F","G"
         
         if lettre in ['H','I']:
@@ -32,7 +35,7 @@ def musculationSalleCardio(objective,muscle):
     if objective == 'PERTE DE POIDS':
         exo1 = musculationSalleSpecifique(muscle,"PERTE DE POIDS")
         type_exos2 = random.choice(['ENDURANCE','RÉSISTANCE'])
-        
+        mets =  18 
         if type_exos2 == 'ENDURANCE':
             # lettre = random.choice(["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O"])
             exo2 = Endurance("A",False)
@@ -43,7 +46,7 @@ def musculationSalleCardio(objective,muscle):
     if objective == 'REMISE EN FORME':
         exo1 = musculationSalleSpecifique(muscle,"REMISE EN FORME")
         type_exos2 = random.choice(['ENDURANCE','RÉSISTANCE'])
-        
+        mets =  18 
         if type_exos2 == 'ENDURANCE':
             # lettre = random.choice(["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O"])
             exo2 = Endurance("A",False)
@@ -54,7 +57,7 @@ def musculationSalleCardio(objective,muscle):
     if objective == 'RÉPÉTITIONS DES EFFORTS':
         exo1 = musculationSalleSpecifique(muscle,"RÉPÉTITIONS DES EFFORTS")
         type_exos2 = random.choice(['PUISSANCE','RÉSISTANCE','SPRINT'])
-        
+        mets =  18 
         if type_exos2 == 'PUISSANCE':
             lettre = random.choice(["A","H","I"]) #"B","C","D","E","F","G",
         
@@ -74,7 +77,7 @@ def musculationSalleCardio(objective,muscle):
     if objective == 'FORCE EXPLOSIVE':
         exo1 = musculationSalleSpecifique(muscle,'FORCE EXPLOSIVE')
         type_exos2 = random.choice(['PUISSANCE','SPRINT'])
-        
+        mets = 19
         if type_exos2 == 'PUISSANCE':
             lettre = random.choice(["A","H","I"]) #"B","C","D","E","F","G"
         
@@ -91,7 +94,7 @@ def musculationSalleCardio(objective,muscle):
     # exos = random.choice([exo1+exo2,exo2+exo1])
     total_exercice = f'{exo1}{exo2}\n'
     
-
-    return total_exercice
+    mets = mets + 5+7 #ajoute lechauffement et termine par
+    return total_exercice, mets
 
 

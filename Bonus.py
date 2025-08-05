@@ -9,7 +9,15 @@ def ProgammeBonus(niveau):
     type_exercice = random.choice(['ABDOS','POMPES','GAINAGE'])
     video_choice = ''
 
-    
+    mets = 0
+
+
+    if niveau == 'Debutant':
+        mets = 4
+    elif niveau == 'Intermidiaire':
+        mets = 4
+    elif niveau == 'Avance':  
+        mets =  6 
     
     if niveau == 'Debutant':
         if type_exercice == 'ABDOS':
@@ -77,5 +85,5 @@ def ProgammeBonus(niveau):
     #     exercice += ProgammeBonus(niveau,0)
     # else:
     #     pass
-    return exercice
+    return exercice, mets
 

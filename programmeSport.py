@@ -7,86 +7,37 @@ from programmeMaison import programmeMaison
 from ProgrammeDehors import PerteDePoids,puissance,remiseEnForme,BoxTOBOX
 from Bonus import ProgammeBonus
 import re
-from getLinkYtb import programme_musculation
-# from spot1.translation import translate
-from fpdf import FPDF
-
-# from spot1.arabTrad import process_and_save_workout_program
-# from spot1.translation import translate
-
-
-
-def save_to_pdf(content, filename="exos.pdf"):
-    pdf = FPDF()
-    pdf.set_auto_page_break(auto=True, margin=15)
-    pdf.add_page()
-    # pdf.image("image.png", x = 30, y = 0)
-    pdf.set_font("Arial", size=12)
-
-    # Regex pour détecter les liens
-    link_pattern = r'(https?://\S+)'
-
-    lines = content.split('\n')
-    for line in lines:
-        # Recherche des liens dans la ligne
-        match = re.search(link_pattern, line)
-        if match:
-            # Extraire le lien
-            url = match.group(0)
-            # Remplacer le lien par "Video" cliquable
-            text = "Video"
-            pdf.set_font("Arial", style="", size=12)  # Style normal
-            pdf.set_text_color(0, 0, 255)  # Bleu pour le lien
-
-            # Centrer "Video"
-            pdf.cell(0, 10, text, ln=True, align="C", link=url)
-        else:
-            if "Echauffement" in line:
-                # Gestion du texte "Échauffement"
-                pdf.set_font("Arial", style="", size=12)
-                pdf.set_text_color(0, 0, 0)
-
-                # Mesurer la largeur du texte
-                text_width = pdf.get_string_width(line) + 2  # Marges
-
-                # Calculer la position X pour centrer le texte souligné
-                page_width = pdf.w - pdf.l_margin - pdf.r_margin
-                x_position = (page_width - text_width) / 2 + pdf.l_margin
-
-                # Ajouter le texte souligné
-                pdf.set_x(x_position)
-                pdf.cell(text_width, 10, line, border="B", ln=True, align="C")
-            elif line.strip() and (line.isupper() or line.startswith("Jour") or line.startswith("PARTIE BONUS")):
-                pdf.set_font("Arial", style="B", size=12)  # Gras
-                pdf.set_text_color(0, 0, 0)  # Noir
-                pdf.cell(0, 10, line, ln=True, align="C")
-            else:
-                pdf.set_font("Arial", style="", size=12)  # Normal
-                pdf.set_text_color(0, 0, 0)  # Noir
-                pdf.cell(0, 10, line, ln=True, align="C")
-
-    pdf.output(filename)
-    return f"Saved to {filename}"
-
+from getLinkYtb import programme_musculation, programme_musculation_haut, programme_musculation_bas
 
 Niveaux = ['Débutant',"Intermidiaire","Avancé"]
-
-
-
 
 def programme_seance(choix,objective_kine,theme,niveau):
 
     echauffement = ''
     programme_seance = ''
 
+    mets_principal = 0
+    mets_echauffement = 0
+    mets_bonus = 0
+    mets_total = 0
+
     # programme_seance += f'Kine {objective_kine} \n'
-    programme_seance += programme_kine(objective_kine)     ## Generale/Specifique
+    programme_kin, mets_echauffement = programme_kine(objective_kine)
+    programme_seance +=  programme_kin    ## Generale/Specifique
 
 
     ajout_Bonus = random.choice([0,1])
 
     if choix == 'MUSCULATION EN SALLE':
-        programme_seance += musculationSalle('General',theme,programme_musculation)
+        pr = random.randint(0,1)
+        if pr== 0:
+            programme_musculation_choisi = programme_musculation_haut
+        else :
+            programme_musculation_choisi = programme_musculation_bas
+        #programme_musculation_choisi = random.choice([programme_musculation_haut, programme_musculation_bas]) # Soit le haut soit le bas
+        #print(programme_musculation)
+        programme_princ, mets_principal = musculationSalle('General',theme,programme_musculation)
+        programme_seance += programme_princ
     
     elif choix == 'MUSCULATION EN SALLE (Specifique)':
         obj = random.choice([
@@ -97,11 +48,27 @@ def programme_seance(choix,objective_kine,theme,niveau):
         programme_seance += musculationSalleSpecifique(theme,obj)
     
     elif choix == 'CARDIO EN SALLE':
+
+
+
+        if theme == 'PUISSANCE':
+            mets_principal = 38 #16+5+10+7
+        elif theme == 'ENDURANCE':
+            mets_principal = 34.5 #12.5+5+10+7
+        elif theme == 'RÉSISTANCE':
+            mets_principal = 36 #14+5+10+7
+        elif theme == 'SPRINT':
+            mets_principal = 40 #18+5+10+7
+        elif theme == 'PERTE DE POIDS':
+            mets_principal = 36 #14+5+10+7
+
         echauffement = echauffement_cardio()
         programme_seance += echauffement
         ajout_Bonus = 1
+
         # programme_seance += theme + '\n'
         if theme == 'PUISSANCE':
+            mets_principal = 21 #16+5
             # lettre = random.choice(["A","B","C","D","E","F","G","H","I"])
             # if lettre in ['H','I']:
             #     programme_seance += puissanceTapis(lettre)
@@ -110,6 +77,7 @@ def programme_seance(choix,objective_kine,theme,niveau):
             programme_seance += random.choice([puissanceTapis('A'),puissanceVelo('A')])
 
         elif theme == 'ENDURANCE':
+            mets_principal = 22.5 #12.5+10
             # lettre = random.choice(["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O"])
 
             programme_seance += Endurance("A")
@@ -129,8 +97,10 @@ def programme_seance(choix,objective_kine,theme,niveau):
             programme_seance += pertePoids("A")
 
     elif choix == 'MUSCULATION EN SALLE + CARDIO(Generale)':
+        prog, mets_principal = musculationSalleCardio(theme,'')
+        programme_seance +=prog
 
-        programme_seance += musculationSalleCardio(theme,'')
+        #programme_seance += musculationSalleCardio(theme,'')
     
     elif choix == 'MUSCULATION EN SALLE + CARDIO(Specifique)':
         obj = random.choice([
@@ -138,11 +108,15 @@ def programme_seance(choix,objective_kine,theme,niveau):
             "PERTE DE POIDS", "REMISE EN FORME", "RÉPÉTITIONS DES EFFORTS", 
             "FORCE EXPLOSIVE"
         ])
-        programme_seance += musculationSalleCardio(obj,theme)
+
+        prog, mets_principal = musculationSalleCardio(obj,theme)
+        programme_seance += prog
     
     elif choix == 'PROGRAMME MAISON':
         ajout_Bonus = 1
-        programme_seance += programmeMaison(theme)
+        prog, mets_principal = programmeMaison(theme)
+        programme_seance += prog
+        #programme_seance += programmeMaison(theme)
     
     elif choix == 'PROGRAMME DEHORS':
         ajout_Bonus = 1
@@ -151,16 +125,20 @@ def programme_seance(choix,objective_kine,theme,niveau):
 
         if theme == 'PERTE DE POIDS':
             lettre = random.choice(["A","B","C","D","E","F","G","H","I"])
+            mets_principal = 38 #5+10+15+8
             programme_seance += PerteDePoids(lettre)
         elif theme == 'PUISSANCE':
             lettre = random.choice(["A","B","C","D","E","F","G","H","I"])
             programme_seance += puissance(lettre)
+            mets_principal = 41 #7 + 10 + 16 + 8
         elif theme == 'REMISE EN FORME':
             lettre = random.choice(["A","B","C","D","E","F"])
             programme_seance+= remiseEnForme(lettre)
+            mets_principal = 41 #7 + 10 + 16 + 8
         elif theme == 'BOX TO BOX':
             lettre = random.choice(["A","B","C","D","E","F","G","H","I","J","K","L","M","N"])
             programme_seance += BoxTOBOX(lettre)
+            mets_principal = 39 #5+10+16+8
         
     else:
         programme_seance = 'choix invalide'
@@ -170,13 +148,14 @@ def programme_seance(choix,objective_kine,theme,niveau):
 
 
     if ajout_Bonus == 1:
-        exercices_Bonus = ProgammeBonus(niveau)
+        exercices_Bonus, mets_bonus = ProgammeBonus(niveau)
 
         programme_seance += f'PARTIE BONUS: \n {exercices_Bonus}'
     else:
         pass
-    
-    return theme + '\n' + programme_seance
+    mets_total= mets_echauffement + mets_principal + mets_bonus
+
+    return theme + '\n' + programme_seance + '\n Dépense énergétique de la seance: ' + str(mets_total) + 'METS'
 
 def supprimer_doublons_terminer_par(programme):
     """
@@ -298,86 +277,4 @@ def programme_semaine_utilisateur(choix, theme_principal, nbr_seances, niveau):
     programme_hebdomadaire_corrige = supprimer_doublons_terminer_par(programme_hebdomadaire)
 
     return programme_hebdomadaire_corrige
-
-
-# def save_to_pdf_arabic(content, filename="document_ar.pdf"):
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_auto_page_break(auto=True, margin=15)
-
-    # Importation de la police prenant en charge l'arabe (exemple : Amiri-Regular.ttf)
-    pdf.add_font("Amiri", fname='./dejavu-sans/DejaVuSans.ttf', uni=True)   
-    pdf.set_font("Amiri", size=12)
-
-    # Modèle pour détecter les liens
-    link_pattern = r'(https?://\S+)'
-    line_height = 5
-
-    # Séparation des lignes
-    lines = content.split('\n')
-    for line in lines:
-        # Recherche des liens dans la ligne
-        match = re.search(link_pattern, line)
-        if match:
-            url = match.group(0)  # Extraire l'URL
-            pdf.set_text_color(0, 0, 255)  # Couleur bleue pour les liens
-            pdf.cell(0, line_height, "ﻮﻳﺪﻴﻔﻟﺍ ﻂﺑﺍﺭ ", ln=True, align="R", link=url)  # Ajout du lien
-        else:
-            pdf.set_text_color(0, 0, 0)  # Couleur noire
-            if "ﺍﻹﺣﻤﺎﺀ" in line:  # Exemple pour des mots spécifiques
-                pdf.set_font("Amiri", style="", size=12)
-                pdf.cell(0, line_height, line, ln=True, align="R", border="B")  # Souligné
-            elif line.strip() and (line.isupper() or line.startswith("ﻡﻮﻴﻟﺍ") or line.startswith("ﺓﺄﻓﺎﻜﻤﻟﺍ")):
-                pdf.set_font("Amiri", style="", size=12)  # Gras
-                pdf.cell(0, line_height, line, ln=True, align="R")
-            else:
-                pdf.set_font("Amiri", style="", size=12)  # Texte normal
-                pdf.cell(0, line_height, line, ln=True, align="R")
-
-    pdf.output(filename)
-    return f"Saved to {filename}"
-
-
-
-
-def translate_programme(language, programme):
-    if not programme:
-        raise ValueError("Programme content is empty or None. Please provide valid text.")
-    
-    lines = programme.split('\n')
-    translated_lines = []
-    
-    # for line in lines:
-        # translated_line = translate(language, line) or ""
-        # translated_lines.append(translated_line)
-    
-    translated_programme = '\n'.join(translated_lines)
-    
-    
-    return translated_programme
-
-
-
-# def save_text_to_pdf_arabic(input_file, output_pdf):
-    
-    # Lire le contenu du fichier texte
-    with open(input_file, "r", encoding="utf-8") as file:
-        content = file.read()
-    
-    # Appeler la fonction pour sauvegarder en PDF
-    result = save_to_pdf_arabic(content, output_pdf)
-    print(result)
-
-# Appeler la fonction avec le nom du fichier texte
-# save_text_to_pdf_arabic("arabic_programme.txt", "document_ar.pdf")
-
-# exos = programme_seance('MUSCULATION EN SALLE (Specifique)','General','BRAS','Debutant')
-
-
-# trans_exos = translate_programme('ar',programme=exos)
-# print(trans_exos)
-
-# save_to_pdf(exos)
-# save_to_pdf_arabic('arabic_programme.txt', "arabic_programme.pdf")
-
 

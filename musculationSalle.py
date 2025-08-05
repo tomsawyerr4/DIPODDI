@@ -1,10 +1,12 @@
 import random
-from getLinkYtb import programme_musculation, BRAS,DOS,EPAULES,JAMBES,PECTORAUX
+from getLinkYtb import programme_musculation, programme_musculation_haut, programme_musculation_bas, BRAS,DOS,EPAULES,JAMBES,PECTORAUX
 ### programme musculation en Salle
 
 Objectives_Musculation_Salle = ["ENDURANCE DE FORCE", "FORCE MAX", "MASSE MUSCULAIRE", "PERTE DE POIDS" ,"REMISE EN FORME","RÉPÉTITIONS DES EFFORTS","FORCE EXPLOSIVE"]
 
 Groupes_Musculaire = ["BRAS" ,"DOS" ,"ÉPAULE","PECTORAUX","JAMBES"]
+Groupes_Haut = ["BRAS" ,"DOS" ,"ÉPAULE","PECTORAUX"]
+Groupes_Bas = ["JAMBES"]
 
 objective = random.choice(Objectives_Musculation_Salle)
 
@@ -23,7 +25,24 @@ def musculationSalle(type,objective,programme):
     reptitions = 1
     recuperation_time = 1
     video_choix = ''
-    
+
+    mets = 0
+
+
+    if objective == 'ENDURANCE DE FORCE':
+        mets = 6
+    elif objective == 'FORCE MAX':
+        mets = 9
+    elif objective == 'MASSE MUSCULAIRE':
+        mets = 10
+    elif objective == 'PERTE DE POIDS':
+        mets = 5
+    elif objective == 'REMISE EN FORME':
+        mets = 5
+    elif objective == 'RÉPÉTITIONS DES EFFORTS':
+        mets = 8
+    elif objective == 'FORCE EXPLOSIVE':
+        mets = 7  
     
     if type == 'General':
         if objective == "ENDURANCE DE FORCE":
@@ -62,7 +81,7 @@ def musculationSalle(type,objective,programme):
         elif objective == "MASSE MUSCULAIRE":
             nbr_exercice = random.randint(4,5)
             for i in range(nbr_exercice-1):
-                if programme == programme_musculation:
+                if programme == programme_musculation or programme == programme_musculation_haut or programme_musculation_bas:
                     video_choix = random.choice([random.choice(sublist) for sublist in programme])+'\n'
                 else:
                     video_choix = random.choice(programme)+'\n'
@@ -146,7 +165,7 @@ def musculationSalle(type,objective,programme):
         
         
     exercices_totals = echauffement + '\n' + exercice
-    return exercices_totals
+    return exercices_totals, mets
 
 
 def dexieme_exercice(objective,programme):   
@@ -229,7 +248,9 @@ def musculationSalleSpecifique(muscle,objective):
         programme = PECTORAUX
     else:
         programme = JAMBES
-    exercice += musculationSalle('General',objective,programme)
+    musc,mets = musculationSalle('General',objective,programme)
+    exercice += musc
+    #exercice += musculationSalle('General',objective,programme)
 
 
 

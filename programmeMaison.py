@@ -9,6 +9,18 @@ def programmeMaison(objective):
     nbr_tours= 1
     recuperation_time = 1
 
+    mets = 0
+
+    if objective == 'Perte DE POIDS':
+        mets =  8+5
+    elif objective == 'RENFORCEMENT':
+        mets= 8+5
+    elif objective == 'BRULER DES CALORIES' :
+        mets = 9+5
+
+
+
+
     choix_video = ''
     if objective == 'Perte DE POIDS':
         for i in range(nbr_exercice):
@@ -48,7 +60,7 @@ def programmeMaison(objective):
 
         exercice += f'{choix_video} Chaque exercice dure {duree_exercice} sec, 5 videos équivaux 1 tour\n( Effectuer {nbr_tours} tours, récupération si vous fatiguez {recuperation_time} sec ).\n'
     
-    return exercice
+    return exercice, mets
 
 
 
